@@ -29,7 +29,7 @@ data/u16-d2-2026-2027.json
 
 ## URL
 
-https://sajomtech-commits.github.io/salon-bel-air-u16/
+https://aminax547-cpu.github.io/salon-bel-air-u16/
 
 ---
 Fait avec 🤍 pour Salon Bel Air Foot. Site non officiel.
