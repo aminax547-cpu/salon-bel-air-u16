@@ -1,7 +1,7 @@
 # PLAN — Salon Bel Air Foot | Site Classement U16
 
 **Auteur:** Muse Spark pour Amine · 27 sept 2026
-**Repo cible:** `sajomtech-commits/salon-bel-air-u16` (public, GitHub Pages)
+**Repo cible:** `aminax547-cpu/salon-bel-air-u16` (compte Amine — public, GitHub Pages)
 **Workspace:** `/workspace/Amine2` → sera poussé sur le git d'Amine
 
 ---
@@ -68,9 +68,9 @@ Mobile : on ne casse pas tout — le tableau reste scrollable horizontalement, m
 
 ## 4 — Stack & Repo public
 
-**Repo à créer :** `https://github.com/sajomtech-commits/salon-bel-air-u16`
+**Repo :** `https://github.com/aminax547-cpu/salon-bel-air-u16` (compte Amine)
 - Public, `main` → GitHub Pages (gratuit, instantané)
-- Compte : **sajomtech-commits** (token déjà validé) — bien dans le git d'Amine
+- Compte : **aminax547-cpu** (Amine, token validé) — comme demandé
 
 **Stack V1 (ultra-léger, pas besoin d'Astro) :**
 - `Vite` + HTML/CSS/JS pur + `Three.js@0.160` (via CDN `importmap`)
@@ -133,7 +133,7 @@ Chaque catégorie = 1 JSON, zéro refonte.
 
 ## 8 — Livraison & hébergement
 
-- **URL finale :** `https://sajomtech-commits.github.io/salon-bel-air-u16/`
+- **URL finale :** `https://aminax547-cpu.github.io/salon-bel-air-u16/`
 - **Coût :** 0€ (GitHub Pages)
 - **MAJ classement :** 30 sec (éditer JSON + push)
 - **SEO :** title `Salon Bel Air Foot — Classement U16 D2 2026/27 | Salon-de-Provence`
@@ -148,7 +148,7 @@ Chaque catégorie = 1 JSON, zéro refonte.
 4. **Logo :** as-tu un SVG/logo HD du Salon Bel Air Foot ? Sinon j'en recrée un minimal (SB AF + 1928) en or/navy.
 
 Dès ton OK (même un « vasy B » suffit), je :
-- crée le repo public dans `sajomtech-commits`,
+- crée le repo public dans `aminax547-cpu`,
 - pousse le site 3D + premier JSON U16 avec données réelles,
 - active GitHub Pages et te donne l'URL en direct.
 
