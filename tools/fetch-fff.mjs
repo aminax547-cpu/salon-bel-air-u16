@@ -34,6 +34,10 @@ const NOM_COMPETITION = 'U16 Départemental 2 — District Provence — 2026/27'
 const CLUB_CIBLE = 'SALON BEL AIR FOOT';
 const OUT = join(ROOT, 'data', 'u16-d2-2026-2027.json');
 
+// Graine d'IDs de matchs de Salon Bel Air déjà identifiés (feuilles de match).
+// Le scan séquentiel complète automatiquement les journées ultérieures.
+const SEED_MATCH_IDS = [79514105, 79514111, 79514115]; // J1, J2, J3
+
 const UA =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 ' +
   '(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36';
@@ -128,6 +132,126 @@ function parseClassement(body) {
   };
 }
 
+/**
+ * Récupère la composition + les infos du match FFF depuis sa page HTML SSR.
+ * @returns {{ joueurs: Array, adversaire: string|null, score: string|null, joue: boolean, journee: number|null, domicile: boolean|null }}
+ */
+async function fetchMatchSquad(matchId, clubCible) {
+  try {
+    const url = `https://epreuves.fff.fr/competition/match/${matchId}`;
+    const html = await fetchPage(url);
+    const state = extractNgState(html);
+    const body = stateValue(state, `/matches/${matchId}`);
+    if (!body) return { joueurs: [], adversaire: null, score: null, joue: false, journee: null, domicile: null };
+    const df = body.donneesFormatees || body;
+    const joueurs = [];
+    let adversaire = null, domicile = null;
+    for (const side of ['recevant', 'visiteur']) {
+      const adv = df[side] || {};
+      const club = (adv.club || {}).nom || '';
+      const estCible = club.toUpperCase().includes(clubCible.toUpperCase());
+      if (estCible) {
+        domicile = side === 'recevant';
+        for (const p of adv.composition || []) {
+          joueurs.push({
+            inNo: p.inNo ?? null,
+            maillot: p.maillot ?? null,
+            prenom: (p.prenom || '').trim(),
+            nom: (p.nom || '').trim(),
+            type: p.type === 'remplacant' ? 'remplaçant' : 'titulaire',
+            momentsForts: p.momentsForts || [],
+          });
+        }
+      } else if (club) {
+        adversaire = club;
+      }
+    }
+    const joue = !!df.joue;
+    const score =
+      joue && df.recevant?.buts != null && df.visiteur?.buts != null
+        ? `${df.recevant.buts} — ${df.visiteur.buts}`
+        : null;
+    return {
+      joueurs,
+      adversaire,
+      score,
+      joue,
+      journee: df.journee?.pjNo != null ? num(df.journee.pjNo) : null,
+      domicile,
+    };
+  } catch (e) {
+    console.warn(`  (match ${matchId} indisponible : ${e.message})`);
+    return { joueurs: [], adversaire: null, score: null, joue: false, journee: null, domicile: null };
+  }
+}
+
+/** Compile l'effectif de façon incrémentale : charge l'effectif précédent,
+ *  applique les nouvelles feuilles de match par-dessus et préserve buts/passes.
+ *  @param {Array<{matchId:number, joueurs:Array}>} nouveauxMatchs
+ *  @param {Set<number>} matchIdsDejaTraites
+ */
+function compileSquad(nouveauxMatchs, matchIdsDejaTraites) {
+  const prevFile = join(ROOT, 'data', 'u16-joueurs.json');
+  let prev = { joueurs: [], sourceMatchIds: matchIdsDejaTraites ? [...matchIdsDejaTraites] : [] };
+  if (existsSync(prevFile)) {
+    try { prev = JSON.parse(readFileSync(prevFile, 'utf-8')); } catch (_) { /* ignore */ }
+  }
+
+  // base : effectif existant (buts/passes préservés)
+  const map = new Map();
+  for (const j of prev.joueurs || []) {
+    const nom = (j.nom || '').trim();
+    const key = `${j.numero ?? ''}|${nom}`;
+    map.set(key, {
+      numero: j.numero,
+      nom,
+      poste: j.poste || 'Effectif',
+      matchsJoues: j.matchsJoues ?? 0,
+      titularisations: j.titularisations ?? 0,
+      remplacements: j.remplacements ?? 0,
+      cartons: j.cartons ?? 0,
+      buts: j.buts ?? 0,
+      passes: j.passes ?? 0,
+    });
+  }
+
+  // appliquer les nouvelles feuilles de match (incrément)
+  for (const { joueurs } of nouveauxMatchs) {
+    for (const p of joueurs) {
+      const nomComplet = `${p.prenom} ${p.nom}`.trim() || '—';
+      const key = `${p.maillot ?? ''}|${nomComplet}`;
+      const cur = map.get(key) || {
+        numero: p.maillot, nom: nomComplet, poste: 'Effectif',
+        matchsJoues: 0, titularisations: 0, remplacements: 0, cartons: 0,
+        buts: 0, passes: 0,
+      };
+      cur.matchsJoues += 1;
+      if (p.type === 'titulaire') cur.titularisations += 1;
+      else cur.remplacements += 1;
+      cur.cartons += (p.momentsForts || []).filter((m) => m === 'carton-jaune' || m === 'carton-rouge').length;
+      if (cur.numero == null) cur.numero = p.maillot;
+      map.set(key, cur);
+    }
+  }
+
+  const effectif = [...map.values()]
+    .sort((a, b) => (a.numero ?? 99) - (b.numero ?? 99) || a.nom.localeCompare(b.nom))
+    .map((p) => ({
+      numero: p.numero,
+      nom: p.nom,
+      poste: p.titularisations > 0 && p.remplacements === 0 ? 'Titulaire' : (p.remplacements > 0 ? 'Remplaçant / titulaire' : p.poste || 'Effectif'),
+      matchsJoues: p.matchsJoues,
+      titularisations: p.titularisations,
+      remplacements: p.remplacements,
+      cartons: p.cartons,
+      buts: p.buts,
+      passes: p.passes,
+    }));
+
+  const sourceMatchIds = [...new Set([...(prev.sourceMatchIds || []), ...nouveauxMatchs.map((m) => m.matchId)])];
+  return { effectif, sourceMatchIds };
+}
+
 function parseMatchs(body) {
   const member = body?.['hydra:member'] || [];
   return member
@@ -205,8 +329,6 @@ async function main() {
       }
     }
   }
-
-  // 3. les matchs présents dans le snapshot (semaines affichées)
   let matchs = [];
   for (const k of Object.keys(state)) {
     if (k.includes(`/matches?cpNo=${CPNO}`)) {
@@ -216,6 +338,158 @@ async function main() {
   // dédupliquer par maNo
   const seen = new Set();
   matchs = matchs.filter((m) => (seen.has(m.maNo) ? false : (seen.add(m.maNo), true)));
+
+  // 3quater. Effectif : récupération des feuilles de match (compositions) des
+  // journées jouées. Les IDs de matchs FFF sont consécutifs par journée ; on
+  // collecte ceux de SBA (déjà connus) puis on scanne la plage entre min et max
+  // connus pour les journées jouées manquantes (borné → évite le rate-limit).
+  console.log('→ Récupération des feuilles de match (effectif)…');
+  const matchIdsConnus = [...SEED_MATCH_IDS, ...matchs.filter(isBelAirMatch).map((m) => m.maNo).filter(Boolean)];
+  const journeesJouees = journees.filter((j) => new Date(j.date) < new Date(Date.now() - 12 * 3600 * 1000));
+  const matchIdsCibles = new Set(matchIdsConnus);
+  const attente = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  // IDs uniques connus par journée jouée
+  const idsParJournee = new Map();
+  for (const m of matchs.filter(isBelAirMatch)) {
+    if (m.maNo && m.journee) {
+      const cur = idsParJournee.get(m.journee) || [];
+      cur.push(m.maNo);
+      idsParJournee.set(m.journee, cur);
+    }
+  }
+  // journées jouées sans match SBA connu → scanner entre min et max des IDs connus
+  const joursSansMatch = journeesJouees.filter((j) => !idsParJournee.has(j.pjNo));
+  if (joursSansMatch.length && matchIdsConnus.length) {
+    const mini = Math.min(...matchIdsConnus);
+    const maxi = Math.max(...matchIdsConnus);
+    // on scanne la plage complète entre min et max (bornée) pour les matchs SBA
+    for (let id = mini; id <= maxi; id++) {
+      if (matchIdsCibles.has(id)) continue;
+      const idNum = String(id);
+      let ok = false;
+      for (let essai = 0; essai < 2 && !ok; essai++) {
+        try {
+          const url = `https://epreuves.fff.fr/competition/match/${idNum}`;
+          const html = await fetchPage(url);
+          const state = extractNgState(html);
+          const body = stateValue(state, `/matches/${idNum}`);
+          const df = body?.donneesFormatees || body || {};
+          const rn = ((df.recevant?.club || {}).nom || '').toUpperCase();
+          const vn = ((df.visiteur?.club || {}).nom || '').toUpperCase();
+          const pj = df.journee?.pjNo ?? null;
+          if ((rn.includes('SALON BEL AIR') || vn.includes('SALON BEL AIR')) && num(pj) > 0) {
+            matchIdsCibles.add(id);
+          }
+          ok = true;
+        } catch (_) {
+          await attente(300); // 404 ou rate-limit : on retente une fois
+        }
+      }
+      await attente(150); // politesse anti-rate-limit
+    }
+    console.log(`  (scan des matchs voyage ${mini}–${maxi})`);
+  }
+  const matchsAvecCompo = []; // { matchId, joueurs[] }
+  const prevSquadFile = join(ROOT, 'data', 'u16-joueurs.json');
+  let matchIdsTraites = new Set();
+  if (existsSync(prevSquadFile)) {
+    try {
+      matchIdsTraites = new Set(JSON.parse(readFileSync(prevSquadFile, 'utf-8')).sourceMatchIds || []);
+    } catch (_) { /* ignore */ }
+  }
+  let nouveaux = 0;
+  const nouveauIds = [];
+  const infosMatchsScan = new Map(); // pjNo -> {adversaire, score, joue, domicile} issus du scan
+  for (const id of matchIdsCibles) {
+    if (matchIdsTraites.has(id)) continue; // déjà compté dans l'effectif existant
+    const info = await fetchMatchSquad(id, 'SALON BEL AIR');
+    if (info.joueurs.length || info.journee) {
+      matchsAvecCompo.push({ matchId: id, joueurs: info.joueurs });
+      nouveauIds.push(id);
+      nouveaux++;
+      if (info.journee && info.adversaire) {
+        infosMatchsScan.set(info.journee, {
+          adversaire: info.adversaire,
+          score: info.score,
+          joue: info.joue,
+          domicile: info.domicile,
+        });
+      }
+      console.log(`  ✓ match ${id} → ${info.joueurs.length} joueurs (nouveau)`);
+    }
+    await attente(150);
+  }
+  const effectif = compileSquad(matchsAvecCompo, matchIdsTraites);
+
+  // 3terbis. Rattrapage calendrier : pour les journées jouées dont l'adversaire
+  // n'est ni dans le snapshot SSR ni dans le scan (matchs déjà traités les runs
+  // précédents), on récupère les infos via les seed IDs connus.
+  const snapshotPj = new Set(matchs.filter(isBelAirMatch).map((m) => num(m.journee)));
+  for (const j of journees) {
+    if (snapshotPj.has(j.pjNo) || infosMatchsScan.has(j.pjNo)) continue;
+    const dateJ = new Date(j.date);
+    if (dateJ > new Date(Date.now() - 12 * 3600 * 1000)) continue; // pas encore jouée
+    // trouver un seed ID dont la journée correspond : on fetch et on vérifie
+    for (const id of SEED_MATCH_IDS) {
+      if (infosMatchsScan.has(j.pjNo)) break;
+      const info = await fetchMatchSquad(id, 'SALON BEL AIR');
+      if (info.journee === j.pjNo && info.adversaire) {
+        infosMatchsScan.set(info.journee, {
+          adversaire: info.adversaire,
+          score: info.score,
+          joue: info.joue,
+          domicile: info.domicile,
+        });
+        console.log(`  ✓ infos match ${id} (${info.adversaire} ${info.score || ''})`);
+      }
+      await attente(150);
+    }
+  }
+
+  // 3ter. calendrier complet : journées officielles + matchs connus
+  // Le site FFF ne charge que la semaine active en SSR ; on construit donc le
+  // calendrier depuis les 22 journées officielles (dates fiables) et on greffe
+  // les matchs réels dès qu'ils sont publiés (snapshot + scan des feuilles).
+  const calendrier = journees
+    .slice()
+    .sort((a, b) => a.pjNo - b.pjNo)
+    .map((j) => {
+      // priorité 1 : infos du scan des feuilles de match (fiables, toutes journées)
+      const scan = infosMatchsScan.get(j.pjNo);
+      if (scan) {
+        return {
+          journee: `J${j.pjNo}`,
+          date: j.date,
+          passe: new Date(j.date) < new Date(Date.now() - 12 * 3600 * 1000),
+          joue: scan.joue,
+          adversaire: scan.adversaire,
+          domicile: scan.domicile,
+          score: scan.score,
+        };
+      }
+      // priorité 2 : snapshot du SSR (semaine active)
+      const m = matchs.find((x) => isBelAirMatch(x) && num(x.journee) === j.pjNo);
+      const now = new Date();
+      const dateJ = new Date(j.date);
+      return {
+        journee: `J${j.pjNo}`,
+        date: j.date,
+        passe: dateJ < new Date(now.getTime() - 12 * 3600 * 1000),
+        joue: m ? m.joue : false,
+        adversaire: m
+          ? (m.recevant.club || m.visiteur.club || '—').toUpperCase().includes('SALON BEL AIR')
+            ? m.visiteur.club || m.recevant.club
+            : m.recevant.club || m.visiteur.club
+          : null,
+        domicile: m
+          ? (m.recevant.club || '').toUpperCase().includes('SALON BEL AIR')
+            ? true
+            : false
+          : null,
+        score: m && m.recevant.buts !== null ? `${m.recevant.buts} — ${m.visiteur.buts}` : null,
+      };
+    });
 
   const belAirMatchs = matchs.filter(isBelAirMatch).sort((a, b) => (a.date < b.date ? 1 : -1));
   const dernier = belAirMatchs.find((m) => m.joue && m.recevant.buts !== null);
@@ -285,13 +559,15 @@ async function main() {
               : dernier.visiteur.buts > dernier.recevant.buts,
         }
       : null,
+    calendrier,
+    effectif: effectif.effectif,
   };
 
   // Ne pas changer le timestamp si le classement n'a pas bougé (évite les commits inutiles)
   if (existsSync(OUT)) {
     try {
       const prev = JSON.parse(readFileSync(OUT, 'utf-8'));
-      const sig = (d) => JSON.stringify(d.classement) + JSON.stringify(d.dernierResultat) + JSON.stringify(d.prochainMatch);
+      const sig = (d) => JSON.stringify(d.classement) + JSON.stringify(d.dernierResultat) + JSON.stringify(d.prochainMatch) + JSON.stringify(d.calendrier) + JSON.stringify(d.effectif);
       if (sig(prev) === sig(data)) {
         data.updated = prev.updated;
         data.updatedLabel = prev.updatedLabel;
@@ -300,10 +576,30 @@ async function main() {
   }
 
   writeFileSync(OUT, JSON.stringify(data, null, 2) + '\n');
+
+  // 5. effectif joueurs (fichier séparé, édité par le club si besoin)
+  const jot = join(ROOT, 'data', 'u16-joueurs.json');
+  writeFileSync(
+    jot,
+    JSON.stringify(
+      {
+        equipe: `${NOM_COMPETITION} — Salon Bel Air Foot`,
+        saison: '2026/27',
+        note: 'Effectif auto-extrait des feuilles de match officielles FFF (composition, incrémenté à chaque journée). La FFF ne publie pas les buts individuels pour les catégories jeunes : champs buts/passes à compléter par le staff — préservés entre les mises à jour. git push = mise à jour.',
+        sourceMatchIds: effectif.sourceMatchIds,
+        joueurs: effectif.effectif,
+      },
+      null,
+      2
+    ) + '\n'
+  );
+
   console.log(`\n✅ ${OUT}`);
   console.log(`   ${classement.rows.length} équipes · MAJ ${data.updatedLabel}`);
   if (dernier) console.log(`   Dernier résultat : ${dernier.recevant.club} ${dernier.recevant.buts}-${dernier.visiteur.buts} ${dernier.visiteur.club}`);
   if (prochain) console.log(`   Prochain match   : ${prochain.recevant.club} vs ${prochain.visiteur.club} (${formatDate(prochain.date)})`);
+  console.log(`✅ ${jot}`);
+  console.log(`   ${effectif.effectif.length} joueurs · ${effectif.sourceMatchIds.length} matchs traités · ${nouveaux} nouveau(x) match(s) ajouté(s)`);
 }
 
 main().catch((e) => {

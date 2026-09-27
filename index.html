@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Salon Bel Air Foot — U16 D2 2026/27 — Classement</title>
-<meta name="description" content="Salon Bel Air Foot — Classement officiel U16 Départemental 2 — District Provence — Saison 2026/27. Données FFF synchronisées automatiquement.">
+<meta name="description" content="Salon Bel Air Foot — Classement officiel U16 Départemental 2 — District Provence — Saison 2026/27. Synchronisé avec les données FFF.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
@@ -13,7 +13,6 @@
 </head>
 <body>
 <div class="bg"></div>
-<canvas id="ball-canvas" aria-hidden="true"></canvas>
 
 <div class="wrap">
   <header>
@@ -26,10 +25,10 @@
 
   <section class="hero">
     <h2>Le classement.<br><em>Sans détour.</em></h2>
-    <p>Championnat <strong style="color:var(--ice)">U16 Départemental 2</strong> — District Provence.<br>
+    <p>Championnat <strong style="color:#fff">U16 Départemental 2</strong> — District Provence.<br>
     Classement officiel FFF, synchronisé automatiquement après chaque week-end.</p>
     <div class="hero-cta">
-      <a href="#classement" class="btn btn-primary">Voir le classement ↓</a>
+      <a href="equipe.html" class="btn btn-primary">⭐ Fiche équipe U16</a>
       <a href="https://epreuves.fff.fr/competition/engagement/457249-u16-departemental-2/phase/1/1" target="_blank" rel="noopener" class="btn btn-ghost">FFF officiel ↗</a>
     </div>
   </section>
@@ -49,12 +48,10 @@
 
   <footer>
     <strong>Salon Bel Air Foot</strong> — Stade Marcel Roustan · Salon-de-Provence (13)<br>
-    Site non officiel — données officielles <a href="https://epreuves.fff.fr/competition/engagement/457249-u16-departemental-2/phase/1/1" target="_blank" rel="noopener">FFF (U16 D2 — Poule A)</a> · mise à jour automatique (GitHub Actions)<br>
-    <a href="https://github.com/aminax547-cpu/salon-bel-air-u16" target="_blank" rel="noopener">Code source</a> · Prochainement : U14 / U17 / U19 / Seniors
+    Site non officiel — données officielles FFF (U16 D2 — Poule A) · mise à jour automatique<br>
+    <a href="https://github.com/aminax547-cpu/salon-bel-air-u16" target="_blank" rel="noopener">Code source</a> · Prochainement : U14 / U17 / U19
   </footer>
 </div>
-
-<div class="hint">🖱️ Clique le ballon — il rebondit · fais-le tourner à la souris</div>
 
 <script type="module" src="app.js"></script>
 </body>
