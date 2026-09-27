@@ -287,6 +287,18 @@ async function main() {
       : null,
   };
 
+  // Ne pas changer le timestamp si le classement n'a pas bougé (évite les commits inutiles)
+  if (existsSync(OUT)) {
+    try {
+      const prev = JSON.parse(readFileSync(OUT, 'utf-8'));
+      const sig = (d) => JSON.stringify(d.classement) + JSON.stringify(d.dernierResultat) + JSON.stringify(d.prochainMatch);
+      if (sig(prev) === sig(data)) {
+        data.updated = prev.updated;
+        data.updatedLabel = prev.updatedLabel;
+      }
+    } catch (_) { /* ignore */ }
+  }
+
   writeFileSync(OUT, JSON.stringify(data, null, 2) + '\n');
   console.log(`\n✅ ${OUT}`);
   console.log(`   ${classement.rows.length} équipes · MAJ ${data.updatedLabel}`);
