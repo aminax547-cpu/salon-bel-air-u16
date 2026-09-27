@@ -1,0 +1,31 @@
+name: Sync classement FFF
+on:
+  schedule:
+    # Mise à jour automatique après les week-ends de matchs (lundi/mardi/jeudi à 08:00 UTC)
+    - cron: '0 8 * * 1'
+    - cron: '0 8 * * 2'
+    - cron: '0 8 * * 4'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Récupérer le classement FFF (U16 D2 — Poule A)
+        run: node tools/fetch-fff.mjs
+
+      - name: Commit si modification
+        run: |
+          if ! git diff --quiet data/u16-d2-2026-2027.json; then
+            git config user.name "bot-classement"
+            git config user.email "bot@users.noreply.github.com"
+            git add data/u16-d2-2026-2027.json
+            git commit -m "auto: sync classement U16 D2 (FFF) — $(date -u +%Y-%m-%d)"
+            git push
+            echo "✅ Classement mis à jour et poussé."
+          else
+            echo "ℹ️ Aucun changement de classement."
+          fi

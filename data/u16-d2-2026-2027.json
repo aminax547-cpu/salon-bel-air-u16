@@ -1,34 +1,263 @@
 {
   "competition": "U16 Départemental 2 — District Provence — 2026/27",
-  "phase": "Phase 1 — Poule C (exemple)",
-  "updated": "2026-09-27",
-  "source": "District Provence FFF — mis à jour manuellement (saison 2026/27 en cours)",
-  "highlight": "Salon Bel Air Foot 22",
-  "note": "Début de saison — classement provisoire. Les résultats seront mis à jour chaque week-end via ce JSON (edit + git push).",
-  "teams": [
-    { "pos": 1, "club": "Salon Bel Air Foot 22", "pts": 9, "j": 3, "g": 3, "n": 0, "p": 0, "bp": 11, "bc": 2, "diff": 9, "isBelAir": true },
-    { "pos": 2, "club": "A.C. Port de Bouc 21", "pts": 7, "j": 3, "g": 2, "n": 1, "p": 0, "bp": 8, "bc": 3, "diff": 5, "isBelAir": false },
-    { "pos": 3, "club": "FC Fuveau Provence", "pts": 6, "j": 3, "g": 2, "n": 0, "p": 1, "bp": 7, "bc": 5, "diff": 2, "isBelAir": false },
-    { "pos": 4, "club": "US Miramas 21", "pts": 6, "j": 3, "g": 2, "n": 0, "p": 1, "bp": 6, "bc": 4, "diff": 2, "isBelAir": false },
-    { "pos": 5, "club": "SMUC Marseille", "pts": 4, "j": 3, "g": 1, "n": 1, "p": 1, "bp": 5, "bc": 5, "diff": 0, "isBelAir": false },
-    { "pos": 6, "club": "SC Saint-Martinois", "pts": 4, "j": 3, "g": 1, "n": 1, "p": 1, "bp": 4, "bc": 6, "diff": -2, "isBelAir": false },
-    { "pos": 7, "club": "Burel FC 21", "pts": 3, "j": 3, "g": 1, "n": 0, "p": 2, "bp": 4, "bc": 7, "diff": -3, "isBelAir": false },
-    { "pos": 8, "club": "FC Marignane Gignac 22", "pts": 3, "j": 3, "g": 1, "n": 0, "p": 2, "bp": 3, "bc": 6, "diff": -3, "isBelAir": false },
-    { "pos": 9, "club": "Istres FC 21", "pts": 1, "j": 3, "g": 0, "n": 1, "p": 2, "bp": 2, "bc": 6, "diff": -4, "isBelAir": false },
-    { "pos": 10, "club": "SO Caillols 21", "pts": 0, "j": 3, "g": 0, "n": 0, "p": 3, "bp": 1, "bc": 7, "diff": -6, "isBelAir": false }
+  "poule": "POULE A",
+  "source": "FFF — epreuves.fff.fr (données officielles, SSR)",
+  "competionId": "457249",
+  "phase": 1,
+  "groupe": 1,
+  "updated": "2026-09-27T19:58:39.311Z",
+  "updatedLabel": "27 sept. 2026, 19:58",
+  "classement": [
+    {
+      "pos": 1,
+      "club": "ISTRES FC",
+      "pts": 7,
+      "j": 3,
+      "g": 2,
+      "n": 1,
+      "p": 0,
+      "bp": 11,
+      "bc": 3,
+      "diff": 8,
+      "evo": 0,
+      "serie": [
+        "V",
+        "V",
+        "N"
+      ],
+      "clCod": "501523",
+      "isBelAir": false
+    },
+    {
+      "pos": 2,
+      "club": "SALON BEL AIR FOOT",
+      "pts": 6,
+      "j": 3,
+      "g": 2,
+      "n": 0,
+      "p": 1,
+      "bp": 15,
+      "bc": 5,
+      "diff": 10,
+      "evo": 6,
+      "serie": [
+        "D",
+        "V",
+        "V"
+      ],
+      "clCod": "551298",
+      "isBelAir": true
+    },
+    {
+      "pos": 3,
+      "club": "CARNOUX F.C. 2",
+      "pts": 6,
+      "j": 2,
+      "g": 2,
+      "n": 0,
+      "p": 0,
+      "bp": 10,
+      "bc": 2,
+      "diff": 8,
+      "evo": 1,
+      "serie": [
+        "V",
+        "V"
+      ],
+      "clCod": "590637",
+      "isBelAir": false
+    },
+    {
+      "pos": 4,
+      "club": "FC SEPTEMES CONSOLAT",
+      "pts": 6,
+      "j": 3,
+      "g": 2,
+      "n": 0,
+      "p": 1,
+      "bp": 9,
+      "bc": 3,
+      "diff": 6,
+      "evo": 2,
+      "serie": [
+        "D",
+        "V",
+        "V"
+      ],
+      "clCod": "553079",
+      "isBelAir": false
+    },
+    {
+      "pos": 5,
+      "club": "S.C. VITROLLES",
+      "pts": 6,
+      "j": 3,
+      "g": 2,
+      "n": 0,
+      "p": 1,
+      "bp": 10,
+      "bc": 8,
+      "diff": 2,
+      "evo": 2,
+      "serie": [
+        "V",
+        "D",
+        "V"
+      ],
+      "clCod": "545903",
+      "isBelAir": false
+    },
+    {
+      "pos": 6,
+      "club": "FC BLANC. CHARTREUX",
+      "pts": 5,
+      "j": 3,
+      "g": 1,
+      "n": 2,
+      "p": 0,
+      "bp": 10,
+      "bc": 9,
+      "diff": 1,
+      "evo": -3,
+      "serie": [
+        "N",
+        "V",
+        "N"
+      ],
+      "clCod": "590220",
+      "isBelAir": false
+    },
+    {
+      "pos": 7,
+      "club": "MGCB FC 2",
+      "pts": 4,
+      "j": 3,
+      "g": 1,
+      "n": 1,
+      "p": 1,
+      "bp": 7,
+      "bc": 9,
+      "diff": -2,
+      "evo": -5,
+      "serie": [
+        "N",
+        "V",
+        "D"
+      ],
+      "clCod": "581799",
+      "isBelAir": false
+    },
+    {
+      "pos": 8,
+      "club": "LUYNES S. 2",
+      "pts": 3,
+      "j": 2,
+      "g": 1,
+      "n": 0,
+      "p": 1,
+      "bp": 7,
+      "bc": 6,
+      "diff": 1,
+      "evo": -3,
+      "serie": [
+        "V",
+        "D"
+      ],
+      "clCod": "508558",
+      "isBelAir": false
+    },
+    {
+      "pos": 9,
+      "club": "FC ETOILE HUVEAUNE",
+      "pts": 3,
+      "j": 3,
+      "g": 1,
+      "n": 0,
+      "p": 2,
+      "bp": 7,
+      "bc": 12,
+      "diff": -5,
+      "evo": 0,
+      "serie": [
+        "V",
+        "D",
+        "D"
+      ],
+      "clCod": "551875",
+      "isBelAir": false
+    },
+    {
+      "pos": 10,
+      "club": "O. ROVENAIN 2",
+      "pts": 0,
+      "j": 2,
+      "g": 0,
+      "n": 0,
+      "p": 2,
+      "bp": 4,
+      "bc": 7,
+      "diff": -3,
+      "evo": 0,
+      "serie": [
+        "D",
+        "D"
+      ],
+      "clCod": "530383",
+      "isBelAir": false
+    },
+    {
+      "pos": 11,
+      "club": "A.S. MAZARGUES",
+      "pts": 0,
+      "j": 2,
+      "g": 0,
+      "n": 0,
+      "p": 2,
+      "bp": 1,
+      "bc": 11,
+      "diff": -10,
+      "evo": 0,
+      "serie": [
+        "D",
+        "D"
+      ],
+      "clCod": "500508",
+      "isBelAir": false
+    },
+    {
+      "pos": 12,
+      "club": "U.S. VENELLOISE",
+      "pts": 0,
+      "j": 3,
+      "g": 0,
+      "n": 0,
+      "p": 3,
+      "bp": 2,
+      "bc": 18,
+      "diff": -16,
+      "evo": 0,
+      "serie": [
+        "D",
+        "D",
+        "D"
+      ],
+      "clCod": "523121",
+      "isBelAir": false
+    }
   ],
-  "nextMatch": {
-    "date": "04 oct 2026 — 15h00",
-    "domicile": "Salon Bel Air Foot 22",
-    "exterieur": "US Miramas 21",
-    "lieu": "Stade Marcel Roustan — Salon-de-Provence",
-    "competition": "U16 D2 — J4"
+  "prochainMatch": {
+    "journee": "J4",
+    "date": "04 oct. 2026",
+    "domicile": "Salon Bel Air Foot",
+    "exterieur": "Adversaire à venir",
+    "lieu": "Calendrier officiel — adversaire publié prochainement"
   },
-  "lastMatch": {
-    "date": "27 sept 2026",
-    "domicile": "Salon Bel Air Foot 22",
-    "exterieur": "A.C. Port de Bouc 21",
-    "score": "3 — 1",
-    "statut": "Victoire"
+  "dernierResultat": {
+    "journee": "J3",
+    "date": "27 sept. 2026",
+    "domicile": "SALON BEL AIR FOOT",
+    "exterieur": "MGCB FC 2",
+    "score": "3 — 0",
+    "victoire": true
   }
 }

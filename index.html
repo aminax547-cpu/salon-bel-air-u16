@@ -4,176 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Salon Bel Air Foot — U16 D2 2026/27 — Classement</title>
-<meta name="description" content="Salon Bel Air Foot — Classement officiel U16 Départemental 2 — District Provence — Saison 2026/27. Suivi élégant du championnat.">
+<meta name="description" content="Salon Bel Air Foot — Classement officiel U16 Départemental 2 — District Provence — Saison 2026/27. Données FFF synchronisées automatiquement.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
-<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
-<style>
-  :root{
-    --navy:#070E1F;
-    --navy2:#0A1628;
-    --gold:#C8A96A;
-    --gold2:#E8D5B5;
-    --ice:#EFF3F8;
-    --muted:#9AA8C7;
-    --glass:rgba(255,255,255,0.07);
-    --glass2:rgba(255,255,255,0.11);
-    --border:rgba(255,255,255,0.12);
-    --border-gold:rgba(200,169,106,0.35);
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{
-    font-family:Inter,system-ui,sans-serif;
-    background:var(--navy);
-    color:var(--ice);
-    min-height:100vh;
-    overflow-x:hidden;
-  }
-  /* Background stadium lights */
-  .bg{
-    position:fixed;inset:0;z-index:-3;
-    background:
-      radial-gradient(900px 600px at 15% 10%, rgba(42,91,215,0.22), transparent 60%),
-      radial-gradient(800px 500px at 85% 15%, rgba(200,169,106,0.16), transparent 60%),
-      radial-gradient(1100px 700px at 50% 100%, rgba(42,91,215,0.10), transparent 65%),
-      linear-gradient(180deg, #070E1F 0%, #0A1628 45%, #0B1A33 100%);
-  }
-  .bg::after{
-    content:"";position:absolute;inset:0;
-    background:repeating-linear-gradient(90deg, transparent 0 120px, rgba(255,255,255,0.015) 120px 121px);
-    mask:linear-gradient(to bottom, transparent, black 20%, black 85%, transparent);
-  }
-  #ball-canvas{
-    position:fixed;inset:0;z-index:-2;
-    width:100%;height:100%;
-    display:block;
-    opacity:0.95;
-  }
-  .wrap{max-width:1160px;margin:0 auto;padding:28px 24px 48px;position:relative}
-  /* Header */
-  header{
-    display:flex;align-items:center;justify-content:space-between;gap:16px;
-    padding:14px 18px;
-    background:rgba(10,22,40,0.55);
-    border:1px solid var(--border);
-    border-radius:16px;
-    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  }
-  .brand{display:flex;align-items:center;gap:14px}
-  .crest{
-    width:44px;height:44px;border-radius:12px;
-    background:linear-gradient(135deg, #C8A96A, #9A7B3D);
-    display:grid;place-items:center;
-    font-family:Outfit,sans-serif;font-weight:800;font-size:13px;color:#1A1206;
-    letter-spacing:0.5px; line-height:1;
-    box-shadow:0 8px 24px rgba(200,169,106,0.35);
-    border:1px solid rgba(255,255,255,0.25);
-  }
-  .crest span{font-size:9px;font-weight:600;opacity:0.85}
-  .brand h1{font-family:Outfit,sans-serif;font-size:1.05rem;font-weight:800;letter-spacing:-0.02em;line-height:1}
-  .brand h1 small{display:block;font-weight:600;color:var(--muted);font-size:0.73rem;letter-spacing:0.08em;text-transform:uppercase;margin-top:2px}
-  .badge{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:8px 14px;border-radius:999px;
-    background:rgba(200,169,106,0.12);border:1px solid var(--border-gold);
-    color:var(--gold2);font-size:0.78rem;font-weight:600;white-space:nowrap;
-  }
-  .dot{width:8px;height:8px;border-radius:50%;background:#2ecc71;box-shadow:0 0 0 0 rgba(46,204,113,.6);animation:pulse 1.8s infinite}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,204,113,.5)}70%{box-shadow:0 0 0 10px rgba(46,204,113,0)}100%{box-shadow:0 0 0 0 rgba(46,204,113,0)}}
-  /* Hero */
-  .hero{
-    text-align:center;padding:54px 20px 18px;
-  }
-  .hero h2{
-    font-family:Outfit,sans-serif;
-    font-size:clamp(2rem, 5vw, 3.4rem);
-    font-weight:800;letter-spacing:-0.04em;line-height:0.95;
-    background:linear-gradient(180deg, #fff 30%, #C8D6F0 100%);
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-  }
-  .hero h2 em{font-style:normal;background:linear-gradient(90deg, #C8A96A, #F0D9A8);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .hero p{color:var(--muted);margin-top:12px;font-size:1rem;max-width:560px;margin-left:auto;margin-right:auto;line-height:1.5}
-  .hero-cta{
-    margin-top:22px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
-  }
-  .btn{
-    padding:10px 18px;border-radius:999px;font-weight:700;font-size:0.88rem;cursor:pointer;
-    border:1px solid var(--border);text-decoration:none;display:inline-flex;align-items:center;gap:8px;
-    transition:all .2s;
-  }
-  .btn-primary{background:var(--gold);color:#1A1206;border-color:var(--gold);box-shadow:0 10px 28px rgba(200,169,106,0.35)}
-  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 14px 32px rgba(200,169,106,0.45)}
-  .btn-ghost{background:rgba(255,255,255,0.06);color:var(--ice);backdrop-filter:blur(10px)}
-  .btn-ghost:hover{background:rgba(255,255,255,0.11)}
-  /* Glass card */
-  .glass{
-    margin-top:34px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
-    border:1px solid var(--border);
-    border-radius:22px;
-    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-    box-shadow:0 24px 64px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08);
-    overflow:hidden;
-    position:relative;
-  }
-  .glass::before{
-    content:"";position:absolute;top:0;left:0;right:0;height:1px;
-    background:linear-gradient(90deg, transparent, rgba(200,169,106,0.5), transparent);
-  }
-  .card-head{
-    padding:18px 22px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
-    border-bottom:1px solid var(--border);
-  }
-  .card-head h3{font-family:Outfit,sans-serif;font-size:1.15rem;font-weight:800;display:flex;align-items:center;gap:10px}
-  .card-head h3 span{font-weight:600;color:var(--muted);font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase}
-  .meta{color:var(--muted);font-size:0.78rem}
-  .meta strong{color:var(--gold2)}
-  /* Table */
-  .table-wrap{overflow-x:auto}
-  table{width:100%;border-collapse:collapse;font-size:0.88rem;min-width:760px}
-  thead th{
-    color:var(--muted);font-weight:700;font-size:0.70rem;letter-spacing:0.08em;text-transform:uppercase;
-    padding:12px 10px;text-align:center;border-bottom:1px solid var(--border);
-  }
-  thead th:nth-child(2){text-align:left;padding-left:22px}
-  tbody td{padding:13px 10px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.06);white-space:nowrap}
-  tbody tr:last-child td{border-bottom:none}
-  tbody tr:hover{background:rgba(255,255,255,0.04)}
-  tbody tr.is-belair{background:linear-gradient(90deg, rgba(200,169,106,0.14), rgba(200,169,106,0.04));}
-  tbody tr.is-belair td{color:#fff}
-  tbody tr.is-belair td.team{color:var(--gold2)}
-  td.pos{font-family:JetBrains Mono,monospace;font-weight:700;width:42px}
-  tr.is-belair td.pos{color:var(--gold)}
-  td.team{text-align:left!important;font-weight:700;padding-left:22px!important;display:flex;align-items:center;gap:10px}
-  .team-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none}
-  tr.is-belair .team-dot{background:var(--gold);box-shadow:0 0 10px rgba(200,169,106,0.8)}
-  td.pts{font-weight:800;color:#fff;background:rgba(255,255,255,0.04);border-radius:8px}
-  tr.is-belair td.pts{background:rgba(200,169,106,0.18);color:var(--gold2)}
-  td.diff.pos{color:#7DFFB2}
-  td.diff.neg{color:#FF8FA3}
-  /* Next match band */
-  .band{
-    margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:18px;
-  }
-  .mini{
-    background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:16px;padding:16px 18px;
-    backdrop-filter:blur(12px);
-  }
-  .mini h4{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-  .mini .scoreline{font-family:Outfit,sans-serif;font-weight:800;font-size:1.05rem}
-  .mini .sub{color:var(--muted);font-size:0.82rem;margin-top:6px;line-height:1.4}
-  .mini.next{border-color:var(--border-gold);background:linear-gradient(135deg, rgba(200,169,106,0.12), rgba(255,255,255,0.04))}
-  /* Footer */
-  footer{text-align:center;margin-top:34px;color:var(--muted);font-size:0.78rem;line-height:1.6}
-  footer a{color:var(--gold2);text-decoration:none;border-bottom:1px solid rgba(200,169,106,0.3)}
-  /* Hint */
-  .hint{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:rgba(10,22,40,0.85);border:1px solid var(--border);padding:8px 14px;border-radius:999px;font-size:0.75rem;color:var(--muted);backdrop-filter:blur(12px);z-index:10}
-  @media (max-width:720px){
-    .band{grid-template-columns:1fr}
-    table{min-width:680px}
-  }
-</style>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%BD%3C/text%3E%3C/svg%3E">
 </head>
 <body>
 <div class="bg"></div>
@@ -190,175 +26,36 @@
 
   <section class="hero">
     <h2>Le classement.<br><em>Sans détour.</em></h2>
-    <p>Suivi élégant du championnat <strong style="color:var(--ice)">U16 Départemental 2</strong> — District Provence. Données mises à jour chaque week-end.</p>
+    <p>Championnat <strong style="color:var(--ice)">U16 Départemental 2</strong> — District Provence.<br>
+    Classement officiel FFF, synchronisé automatiquement après chaque week-end.</p>
     <div class="hero-cta">
       <a href="#classement" class="btn btn-primary">Voir le classement ↓</a>
-      <a href="https://www.fff.fr" target="_blank" class="btn btn-ghost">FFF District Provence ↗</a>
+      <a href="https://epreuves.fff.fr/competition/engagement/457249-u16-departemental-2/phase/1/1" target="_blank" rel="noopener" class="btn btn-ghost">FFF officiel ↗</a>
     </div>
   </section>
 
   <section id="classement" class="glass">
     <div class="card-head">
-      <h3>🏆 Classement U16 D2 <span id="pouleLabel">— District Provence</span></h3>
-      <div class="meta">MAJ : <strong id="updated">—</strong> · <span id="sourceLabel">—</span></div>
+      <h3>🏆 Classement U16 D2 <span id="pouleLabel">— District Provence</span>
+        <span id="sourceHint" style="display:inline-flex;gap:10px"></span></h3>
+      <div class="meta">MAJ&nbsp;: <strong id="updated">—</strong></div>
     </div>
     <div class="table-wrap" id="tableWrap">
-      <div style="padding:40px;text-align:center;color:var(--muted)">Chargement…</div>
+      <div class="status"><div class="spinner"></div>Chargement du classement…</div>
     </div>
   </section>
 
-  <div class="band" id="band">
-    <!-- injected -->
-  </div>
+  <div class="band" id="band"></div>
 
   <footer>
     <strong>Salon Bel Air Foot</strong> — Stade Marcel Roustan · Salon-de-Provence (13)<br>
-    Site non officiel — données : District Provence FFF. Mise à jour manuelle via <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:6px">data/u16-d2-2026-2027.json</code><br>
-    <a href="https://github.com/aminax547-cpu/salon-bel-air-u16">Code source sur GitHub</a> · <a href="./PLAN-Bel-Air-U16.md">Plan du projet</a> · Prochainement : U14 / U17 / U19 / Seniors
+    Site non officiel — données officielles <a href="https://epreuves.fff.fr/competition/engagement/457249-u16-departemental-2/phase/1/1" target="_blank" rel="noopener">FFF (U16 D2 — Poule A)</a> · mise à jour automatique (GitHub Actions)<br>
+    <a href="https://github.com/aminax547-cpu/salon-bel-air-u16" target="_blank" rel="noopener">Code source</a> · Prochainement : U14 / U17 / U19 / Seniors
   </footer>
 </div>
 
-<div class="hint">🖱️ Clique le ballon · fais-le rebondir</div>
+<div class="hint">🖱️ Clique le ballon — il rebondit · fais-le tourner à la souris</div>
 
-<script type="module">
-import * as THREE from 'three';
-
-// -- Ball 3D --
-const canvas = document.getElementById('ball-canvas');
-const renderer = new THREE.WebGLRenderer({ canvas, alpha:true, antialias:true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 0.1, 100);
-camera.position.set(0, 0.6, 7);
-
-// lights
-scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-const dir = new THREE.DirectionalLight(0xfff0d5, 1.2); dir.position.set(4,6,5); scene.add(dir);
-const rim = new THREE.DirectionalLight(0x2A5BD7, 0.6); rim.position.set(-4,2,-4); scene.add(rim);
-const point = new THREE.PointLight(0xC8A96A, 0.8, 10); point.position.set(0,1.5,2.5); scene.add(point);
-
-// ball geometry - classic football truncated icosahedron approx via Icosahedron + detail
-const geom = new THREE.SphereGeometry(1.9, 64, 64);
-// procedural texture canvas for football panels
-function makeBallTexture(){
-  const c = document.createElement('canvas'); c.width=1024; c.height=512;
-  const g = c.getContext('2d');
-  g.fillStyle='#f7f3ea'; g.fillRect(0,0,c.width,c.height);
-  g.strokeStyle='#1a1a1a'; g.lineWidth=3;
-  // draw pentagon pattern approximation
-  const cols=6, rows=3;
-  for(let y=0;y<rows;y++){
-    for(let x=0;x<cols;x++){
-      const cx = (x+0.5 + (y%2?0.5:0))*c.width/cols;
-      const cy = (y+0.5)*c.height/rows;
-      const r = 58;
-      g.beginPath();
-      for(let i=0;i<5;i++){
-        const a = (i*72 -90)*Math.PI/180;
-        const px = cx + Math.cos(a)*r;
-        const py = cy + Math.sin(a)*r *0.9;
-        if(i===0) g.moveTo(px,py); else g.lineTo(px,py);
-      }
-      g.closePath();
-      if((x+y)%2===0){ g.fillStyle='#111'; g.fill(); }
-      g.stroke();
-    }
-  }
-  // stitch lines
-  g.strokeStyle='rgba(0,0,0,0.35)'; g.lineWidth=1;
-  for(let i=0;i<c.width;i+=32){ g.beginPath(); g.moveTo(i,0); g.lineTo(i,c.height); g.stroke(); }
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRSLTSColorSpace;
-  return tex;
-}
-const tex = makeBallTexture();
-const mat = new THREE.MeshStandardMaterial({
-  map: tex, roughness:0.32, metalness:0.02,
-  emissive:0x000000
-});
-const ball = new THREE.Mesh(geom, mat);
-ball.position.set(0, 0.65, 0);
-scene.add(ball);
-// subtle ground shadow
-const shadow = new THREE.Mesh(new THREE.CircleGeometry(1.6, 64), new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.18}));
-shadow.rotation.x = -Math.PI/2; shadow.position.y = -1.25; scene.add(shadow);
-
-function resize(){
-  const w = innerWidth, h=innerHeight;
-  renderer.setSize(w,h,false);
-  camera.aspect = w/h; camera.updateProjectionMatrix();
-}
-addEventListener('resize', resize); resize();
-
-let t=0, bounce=0, vel=0;
-canvas.addEventListener('click', ()=>{ vel = 0.18; });
-addEventListener('keydown', e=>{ if(e.code==='Space'){ vel=0.18; e.preventDefault(); }});
-
-function animate(){
-  requestAnimationFrame(animate);
-  t+=0.006;
-  ball.rotation.y += 0.004 + bounce*0.004;
-  ball.rotation.x = Math.sin(t*0.7)*0.12;
-  ball.rotation.z = Math.cos(t*0.5)*0.05;
-  // bounce physics
-  if(vel!==0 || bounce!==0){
-    bounce += vel; vel -= 0.012;
-    if(bounce<0){ bounce=0; vel*=-0.45; if(Math.abs(vel)<0.01) vel=0; }
-    ball.position.y = 0.65 + bounce*1.2;
-    shadow.material.opacity = 0.18 - bounce*0.06;
-    shadow.scale.setScalar(1 - bounce*0.12);
-  }
-  // parallax on scroll
-  const s = scrollY / 1200;
-  ball.position.x = Math.sin(t*0.3)*0.15 - s*0.3;
-  camera.position.y = 0.6 - s*0.4;
-  camera.lookAt(0,0.2,0);
-  renderer.render(scene, camera);
-}
-animate();
-
-// -- Data --
-async function load(){
-  try{
-    const r = await fetch('./data/u16-d2-2026-2027.json', {cache:'no-store'});
-    const d = await r.json();
-    document.getElementById('updated').textContent = d.updated;
-    document.getElementById('sourceLabel').textContent = d.source || '';
-    document.getElementById('pouleLabel').textContent = '— ' + (d.phase || d.competition);
-    const teams = d.teams.sort((a,b)=> a.pos - b.pos);
-    let html = `<table><thead><tr><th>#</th><th>Club</th><th>Pts</th><th>J</th><th>G</th><th>N</th><th>P</th><th>Bp</th><th>Bc</th><th>Diff</th></tr></thead><tbody>`;
-    for(const tm of teams){
-      const diffCls = tm.diff>0?'pos':tm.diff<0?'neg':'';
-      html += `<tr class="${tm.isBelAir?'is-belair':''}">
-        <td class="pos">${tm.pos}</td>
-        <td class="team"><span class="team-dot"></span> ${tm.club}${tm.isBelAir?' ⭐':''}</td>
-        <td class="pts">${tm.pts}</td>
-        <td>${tm.j}</td><td>${tm.g}</td><td>${tm.n}</td><td>${tm.p}</td>
-        <td>${tm.bp}</td><td>${tm.bc}</td>
-        <td class="diff ${diffCls}">${tm.diff>0?'+':''}${tm.diff}</td>
-      </tr>`;
-    }
-    html += `</tbody></table>`;
-    document.getElementById('tableWrap').innerHTML = html;
-    // band
-    const band = document.getElementById('band');
-    band.innerHTML = `
-      <div class="mini next">
-        <h4>Prochain match — ${d.nextMatch.competition}</h4>
-        <div class="scoreline">${d.nextMatch.domicile} <span style="color:var(--gold)">vs</span> ${d.nextMatch.exterieur}</div>
-        <div class="sub">📅 ${d.nextMatch.date} · 📍 ${d.nextMatch.lieu}</div>
-      </div>
-      <div class="mini">
-        <h4>Dernier résultat</h4>
-        <div class="scoreline">${d.lastMatch.domicile} ${d.lastMatch.score} ${d.lastMatch.exterieur} <span style="color:#7DFFB2">· ${d.lastMatch.statut}</span></div>
-        <div class="sub">📅 ${d.lastMatch.date} · U16 D2</div>
-      </div>`;
-  }catch(e){
-    document.getElementById('tableWrap').innerHTML = `<div style="padding:28px;color:#ff9db0">Impossible de charger le JSON. Vérifie data/u16-d2-2026-2027.json</div>`;
-    console.error(e);
-  }
-}
-load();
-</script>
+<script type="module" src="app.js"></script>
 </body>
 </html>
