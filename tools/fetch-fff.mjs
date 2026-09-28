@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * fetch-fff.mjs — Récupère automatiquement le classement U16 D2 (District Provence)
- * depuis les données publiques de la FFF (epreuves.fff.fr) et génère
- * `data/u16-d2-2026-2027.json`.
+ * fetch-fff.mjs — Récupère automatiquement les classements des équipes jeunes de
+ * Salon Bel Air Foot (District Provence) depuis les données publiques de la FFF
+ * (epreuves.fff.fr) et génère `data/<cat>.json`.
  *
  * Stratégie : le site epreuves.fff.fr est une SPA Angular avec SSR.
  * - L'API JSON directe (/api/data/...) est protégée par un WAF (403) qui accepte
@@ -12,9 +12,10 @@
  * → On fetch la page HTML avec un User-Agent navigateur réaliste, on parse le
  *   `#ng-state`, et on en extrait les données officielles.
  *
- * Usage :  node tools/fetch-fff.mjs            (écrit data/u16-d2-2026-2027.json)
- *          node tools/fetch-fff.mjs --poule B  (choisit une autre poule si dispo)
- * Env :    FFF_CPNO (défaut 457249 = U16 D2 Provence saison 2026/27)
+ * Multi-catégories : on passe la catégorie en argument (voir CATS ci-dessous).
+ *   node tools/fetch-fff.mjs --cat u16    → data/u16.json
+ *   node tools/fetch-fff.mjs --cat u19    → data/u19.json
+ * Pour activer une autre équipe (U14/U17...) : l'ajouter dans CATS avec son cpNo FFF.
  */
 import { writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -24,19 +25,49 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 
 // ---------------------------------------------------------------------------
-// Config
+// Config — une entrée par catégorie (ajouter ici pour activer une équipe)
 // ---------------------------------------------------------------------------
-const CPNO = process.env.FFF_CPNO || '457249'; // U16 D2 District Provence — saison 2026/27
+const CATS = {
+  u16: {
+    cpNo: '457249', // U16 Départemental 2 — POULE A — saison 2026/27
+    slug: 'u16-departemental-2',
+    nom: 'U16 Départemental 2 — District Provence — 2026/27',
+    libelle: 'U16',
+    groupe: 1,
+    seedMatchIds: [79514105, 79514111, 79514115], // J1, J2, J3
+    fichierJoueurs: 'u16-joueurs.json',
+  },
+  u19: {
+    cpNo: '457242', // U19 Départemental 1 — POULE A — saison 2026/27
+    slug: 'u19-departemental-1',
+    nom: 'U19 Départemental 1 — District Provence — 2026/27',
+    libelle: 'U19',
+    groupe: 1,
+    seedMatchIds: [], // à compléter au premier run (scan automatique)
+    fichierJoueurs: 'u19-joueurs.json',
+  },
+};
+
+const argIdx = process.argv.indexOf('--cat');
+const CAT_KEY = argIdx !== -1 ? process.argv[argIdx + 1] || 'u16' : 'u16';
+const CAT = CATS[CAT_KEY];
+if (!CAT) {
+  console.error(`Catégorie inconnue : ${CAT_KEY}. Disponibles : ${Object.keys(CATS).join(', ')}`);
+  process.exit(1);
+}
+
+const CPNO = process.env.FFF_CPNO || CAT.cpNo;
 const PHASE = 1;
-const GROUP = 1; // POULE A (Salon Bel Air Foot y est). --poule B → 2
-const COMPETITION_SLUG = 'u16-departemental-2';
-const NOM_COMPETITION = 'U16 Départemental 2 — District Provence — 2026/27';
+const GROUP = CAT.groupe;
+const COMPETITION_SLUG = CAT.slug;
+const NOM_COMPETITION = CAT.nom;
 const CLUB_CIBLE = 'SALON BEL AIR FOOT';
-const OUT = join(ROOT, 'data', 'u16-d2-2026-2027.json');
+const OUT = join(ROOT, 'data', `${CAT_KEY}.json`);
+const JOUEURS_OUT = join(ROOT, 'data', CAT.fichierJoueurs);
 
 // Graine d'IDs de matchs de Salon Bel Air déjà identifiés (feuilles de match).
 // Le scan séquentiel complète automatiquement les journées ultérieures.
-const SEED_MATCH_IDS = [79514105, 79514111, 79514115]; // J1, J2, J3
+const SEED_MATCH_IDS = CAT.seedMatchIds;
 
 const UA =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 ' +
@@ -191,7 +222,7 @@ async function fetchMatchSquad(matchId, clubCible) {
  *  @param {Set<number>} matchIdsDejaTraites
  */
 function compileSquad(nouveauxMatchs, matchIdsDejaTraites) {
-  const prevFile = join(ROOT, 'data', 'u16-joueurs.json');
+  const prevFile = JOUEURS_OUT;
   let prev = { joueurs: [], sourceMatchIds: matchIdsDejaTraites ? [...matchIdsDejaTraites] : [] };
   if (existsSync(prevFile)) {
     try { prev = JSON.parse(readFileSync(prevFile, 'utf-8')); } catch (_) { /* ignore */ }
@@ -391,7 +422,7 @@ async function main() {
     console.log(`  (scan des matchs voyage ${mini}–${maxi})`);
   }
   const matchsAvecCompo = []; // { matchId, joueurs[] }
-  const prevSquadFile = join(ROOT, 'data', 'u16-joueurs.json');
+  const prevSquadFile = JOUEURS_OUT;
   let matchIdsTraites = new Set();
   if (existsSync(prevSquadFile)) {
     try {
@@ -517,6 +548,58 @@ async function main() {
 
   // 4. build du JSON
   const now = new Date();
+
+  // 4bis. Statistiques "pro" calculées depuis le calendrier (matchs de SBA joués)
+  const stats = (() => {
+    const joues = calendrier.filter((c) => c.joue && c.score && c.adversaire);
+    const forme = joues
+      .slice()
+      .sort((a, b) => (a.date < b.date ? 1 : -1))
+      .slice(0, 5)
+      .map((c) => {
+        const [d, e] = (c.score || '0-0').split('—').map((x) => parseInt(x, 10));
+        const sba = c.domicile ? d : e;
+        const adv = c.domicile ? e : d;
+        return {
+          journee: c.journee,
+          adversaire: c.adversaire,
+          domicile: c.domicile,
+          score: c.score,
+          resultat: sba > adv ? 'V' : sba === adv ? 'N' : 'D',
+          marques: sba,
+          encaisses: adv,
+        };
+      });
+    const totalMarques = forme.reduce((a, m) => a + m.marques, 0);
+    const totalEncaisses = forme.reduce((a, m) => a + m.encaisses, 0);
+    const cleanSheets = forme.filter((m) => m.encaisses === 0).length;
+    const dom = forme.filter((m) => m.domicile);
+    const ext = forme.filter((m) => !m.domicile);
+    return {
+      matchsJoues: forme.length,
+      forme,
+      serie: forme.map((m) => m.resultat), // ['V','N','D',...] → badges 🟢🟠🔴
+      cleanSheets: cleanSheets,
+      cleanSheetsPct: forme.length ? Math.round((cleanSheets / forme.length) * 100) : 0,
+      moyenneMarques: forme.length ? +(totalMarques / forme.length).toFixed(2) : 0,
+      moyenneEncaisses: forme.length ? +(totalEncaisses / forme.length).toFixed(2) : 0,
+      domicile: {
+        matchs: dom.length,
+        victoires: dom.filter((m) => m.resultat === 'V').length,
+        nuls: dom.filter((m) => m.resultat === 'N').length,
+        defaites: dom.filter((m) => m.resultat === 'D').length,
+        buts: dom.reduce((a, m) => a + m.marques, 0),
+      },
+      exterieur: {
+        matchs: ext.length,
+        victoires: ext.filter((m) => m.resultat === 'V').length,
+        nuls: ext.filter((m) => m.resultat === 'N').length,
+        defaites: ext.filter((m) => m.resultat === 'D').length,
+        buts: ext.reduce((a, m) => a + m.marques, 0),
+      },
+    };
+  })();
+
   const data = {
     competition: NOM_COMPETITION,
     poule: pouleNomOfficiel,
@@ -524,6 +607,7 @@ async function main() {
     competionId: CPNO,
     phase: PHASE,
     groupe: gpNo,
+    libelle: CAT.libelle,
     updated: now.toISOString(),
     updatedLabel: now
       .toLocaleString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
@@ -560,6 +644,7 @@ async function main() {
         }
       : null,
     calendrier,
+    stats,
     effectif: effectif.effectif,
   };
 
@@ -567,7 +652,7 @@ async function main() {
   if (existsSync(OUT)) {
     try {
       const prev = JSON.parse(readFileSync(OUT, 'utf-8'));
-      const sig = (d) => JSON.stringify(d.classement) + JSON.stringify(d.dernierResultat) + JSON.stringify(d.prochainMatch) + JSON.stringify(d.calendrier) + JSON.stringify(d.effectif);
+      const sig = (d) => JSON.stringify(d.classement) + JSON.stringify(d.dernierResultat) + JSON.stringify(d.prochainMatch) + JSON.stringify(d.calendrier) + JSON.stringify(d.effectif) + JSON.stringify(d.stats);
       if (sig(prev) === sig(data)) {
         data.updated = prev.updated;
         data.updatedLabel = prev.updatedLabel;
@@ -578,7 +663,7 @@ async function main() {
   writeFileSync(OUT, JSON.stringify(data, null, 2) + '\n');
 
   // 5. effectif joueurs (fichier séparé, édité par le club si besoin)
-  const jot = join(ROOT, 'data', 'u16-joueurs.json');
+  const jot = JOUEURS_OUT;
   writeFileSync(
     jot,
     JSON.stringify(

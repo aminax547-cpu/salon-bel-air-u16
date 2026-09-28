@@ -1,0 +1,23 @@
+name: Notifier le classement
+on:
+  workflow_run:
+    workflows: ["Sync classements FFF"]
+    types: [completed]
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Envoyer webhook Discord (si configuré)
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          if [ -n "$DISCORD_WEBHOOK_URL" ]; then
+            MSG="🔔 Classement U16: Salon Bel Air — consultable sur le site ⚽"
+            curl -s -X POST -H "Content-Type: application/json" \
+              -d "{\"content\": \"🔔 **Classements mis à jour** — Salon Bel Air Foot U16 & U19 ⚽ https://aminax547-cpu.github.io/salon-bel-air-u16/\"}" \
+              "$DISCORD_WEBHOOK_URL" || true
+          else
+            echo "ℹ️ Pas de DISCORD_WEBHOOK_URL configuré — notification ignorée."
+          fi

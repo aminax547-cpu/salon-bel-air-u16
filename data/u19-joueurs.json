@@ -1,0 +1,254 @@
+{
+  "equipe": "U19 Départemental 1 — District Provence — 2026/27 — Salon Bel Air Foot",
+  "saison": "2026/27",
+  "note": "Effectif auto-extrait des feuilles de match officielles FFF (composition, incrémenté à chaque journée). La FFF ne publie pas les buts individuels pour les catégories jeunes : champs buts/passes à compléter par le staff — préservés entre les mises à jour. git push = mise à jour.",
+  "sourceMatchIds": [
+    79379979,
+    79379990,
+    79379988
+  ],
+  "joueurs": [
+    {
+      "numero": 1,
+      "nom": "ALEXANDRE C.",
+      "poste": "Titulaire",
+      "matchsJoues": 2,
+      "titularisations": 2,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 2,
+      "nom": "ALEXIS S.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 1,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 2,
+      "nom": "FLORIAN R.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 3,
+      "nom": "ENZO V.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 3,
+      "nom": "KILIAN B.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 4,
+      "nom": "KILIAN B.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 4,
+      "nom": "WASSIM H.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 5,
+      "nom": "GABRIEL T.",
+      "poste": "Titulaire",
+      "matchsJoues": 2,
+      "titularisations": 2,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 6,
+      "nom": "MATTHIEU T.",
+      "poste": "Titulaire",
+      "matchsJoues": 2,
+      "titularisations": 2,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 7,
+      "nom": "ILIAN S.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 7,
+      "nom": "YFTAHIE M.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 8,
+      "nom": "FLORIAN R.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 8,
+      "nom": "QUENTIN R.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 1,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 9,
+      "nom": "GAETAN L.",
+      "poste": "Titulaire",
+      "matchsJoues": 2,
+      "titularisations": 2,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 10,
+      "nom": "ANTHONY B.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 10,
+      "nom": "QUENTIN R.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 11,
+      "nom": "ANTHONY R.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 11,
+      "nom": "NOLAN D.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 12,
+      "nom": "ARNAUD L.",
+      "poste": "Remplaçant / titulaire",
+      "matchsJoues": 2,
+      "titularisations": 0,
+      "remplacements": 2,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 13,
+      "nom": "ARTHUR R.",
+      "poste": "Remplaçant / titulaire",
+      "matchsJoues": 1,
+      "titularisations": 0,
+      "remplacements": 1,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 13,
+      "nom": "ILIAN S.",
+      "poste": "Remplaçant / titulaire",
+      "matchsJoues": 1,
+      "titularisations": 0,
+      "remplacements": 1,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 14,
+      "nom": "NOA B.",
+      "poste": "Remplaçant / titulaire",
+      "matchsJoues": 1,
+      "titularisations": 0,
+      "remplacements": 1,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    }
+  ]
+}

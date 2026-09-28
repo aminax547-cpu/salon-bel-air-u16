@@ -1,54 +1,63 @@
-# Salon Bel Air Foot — U16 D2 2026/27
+# Salon Bel Air Foot — Plateforme multi-catégories
 
-Site élégant de consultation du classement **U16 Départemental 2 — District Provence** — saison **2026/27**.
+Site élégant de suivi des équipes jeunes de **Salon Bel Air Foot** (District Provence), alimenté
+automatiquement par les données officielles FFF.
 
-- ⚽ **Club :** Salon Bel Air Foot (Salon-de-Provence, Stade Marcel Roustan, fondé 1928)
-- 🏆 **Catégorie :** U16 D2 — Poule A — District Provence (FFF)
-- ✨ **Design :** ballon 3D réaliste (Three.js, texture panneaux icosaédrique + relief) + verre dépoli, palette navy/or
-- 🔄 **Données :** synchronisées **automatiquement** depuis les données officielles FFF (epreuves.fff.fr)
+## ✨ Fonctionnalités
 
-## 🔄 Mise à jour automatique du classement
+- **Multi-catégories** : U16 (D2, 2e) · U19 (D1, 11e) — U17/U14 activables en 2 min (structure prête)
+- **Dashboard accueil** : cartes des équipes + fil d'actualité (résumés générés)
+- **Stats "Pro"** : forme 5 matchs 🟢🟠🔴, % clean sheets, moyenne buts/match, domicile vs extérieur
+- **Match Day** : compte à rebours prochain match, météo (Open-Meteo), bouton "S'y rendre" (Google Maps), ajout au calendrier (.ics)
+- **Effectif** : joueurs extraits des feuilles de match officielles FFF (composition)
+- **Dark mode immersif**, skeleton shimmer, transitions, cartes "Versus" style FIFA
+- **Mobile** : layout responsive
 
-Le site se met à jour **tout seul** après chaque week-end grâce à deux mécanismes :
+## 🔄 Mise à jour automatique (GitHub Actions)
 
-1. **`tools/fetch-fff.mjs`** — script Node (zéro dépendance) qui récupère le classement
-   officiel depuis la page SSR de la FFF (le site FFF bloque l'API JSON directe avec un
-   WAF, mais la page HTML rendue serveur contient toutes les données — on les extrait du
-   `#ng-state` Angular) et écrit `data/u16-d2-2026-2027.json`.
-2. **`.github/workflows/sync.yml`** — GitHub Action qui exécute ce script
-   automatiquement (lundi / mardi / jeudi à 08h UTC) et commit les changements.
-   → push sur `main` = site à jour en ~30 s.
-
-**Lancement manuel :**
-
+`.github/workflows/sync.yml` — toutes les 6 h :
 ```bash
-node tools/fetch-fff.mjs            # Poule A (défaut)
-node tools/fetch-fff.mjs --poule B  # autre poule si un jour
+node tools/fetch-fff.mjs --cat u16   # → data/u16.json (classement + calendrier + stats)
+node tools/fetch-fff.mjs --cat u19   # → data/u19.json
+```
+Incrémental : l'effectif (`*-joueurs.json`) n'est modifié que quand de nouveaux matchs
+apparaissent ; les buts/passes saisis par le staff sont préservés.
+
+### Activer une catégorie (U17 / U14)
+1. Trouver le cpNo FFF (ex. `epreuves.fff.fr/competition/engagement/<cpNo>-...`)
+2. Ajouter l'entrée dans `CATS` dans `tools/fetch-fff.mjs`
+3. Ajouter la carte dans `data/club.json`
+
+## ✍️ Résumés IA (Module 4)
+
+`tools/generer-resume.mjs` — le coach remplit `data/resume-input.json`, l'Action `resume.yml`
+génère l'article (LLM si clé `IA_API_KEY` en secret GitHub, sinon template gratutit).
+L'article apparaît dans le fil d'actualité.
+
+**Config clé IA (DeepSeek dispo dans le workspace)** :
+Settings → Secrets and variables → Actions → `IA_API_KEY` (optionnel : `IA_BASE_URL`, `IA_MODEL`).
+
+## 🔔 Notifications (Module 4)
+
+`.github/workflows/notify.yml` — webhook Discord/WhatsApp après chaque sync si le secret
+`DISCORD_WEBHOOK_URL` est configuré.
+
+## 🗂️ Structure
+
+```
+index.html · style.css · app.js        # SPA (router hash #/u16, #/u19, #/stats, #/calendrier)
+tools/fetch-fff.mjs                    # sync FFF multi-catégories (WAF-safe : SSR ng-state)
+tools/generer-resume.mjs               # générateur de résumés (IA ou template)
+data/club.json                         # config club + catégories + actualités
+data/u16.json · data/u19.json          # classements + calendriers + stats (générés)
+data/u16-joueurs.json · u19-joueurs.json # effectifs (générés + buts/passes éditable)
+data/actus/                            # résumés générés (index.json = fil d'actualité)
+.github/workflows/sync.yml · resume.yml · notify.yml
 ```
 
-Paramétrable via variable d'env : `FFF_CPNO=457249` (U16 D2 Provence 2026/27).
-
-## Structure
-
-```
-index.html                  # page + hero ballon 3D
-style.css                   # design glass navy/or
-app.js                      # classement (découplé de la 3D) + scène Three.js réaliste
-assets/three.module.js      # Three.js hébergé en local (fiable, zéro CDN)
-data/u16-d2-2026-2027.json  # données générées (ne pas éditer à la main)
-tools/fetch-fff.mjs         # script de synchronisation FFF
-.github/workflows/sync.yml  # mise à jour automatique (cron)
-```
-
-## Roadmap
-
-- V1 : U16 D2 + héro ballon 3D + mise à jour auto FFF ✅
-- V2 : onglets U14 / U17 / U19 / Seniors (1 compétition FFF par fichier)
-- V3 : calendrier + résultat détaillé
-
-## URL
+## 🔗
 
 https://aminax547-cpu.github.io/salon-bel-air-u16/
 
 ---
-Fait avec 🤍 pour Salon Bel Air Foot. Site non officiel.
+Fait avec 🤍 pour Salon Bel Air Foot. Site non officiel — données FFF (epreuves.fff.fr).

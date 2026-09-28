@@ -1,0 +1,19 @@
+{
+  "actif": false,
+  "categorie": "U16",
+  "journee": "J4",
+  "domicile": true,
+  "adversaire": "US Miramas",
+  "scoreDomicile": 2,
+  "scoreExterieur": 1,
+  "buteurs": [
+    "LISANDRO F.",
+    "SANDRO J."
+  ],
+  "hommeDuMatch": "DIEGO C.",
+  "adjectifs": [
+    "combativite",
+    "collectif"
+  ],
+  "commentaire": ""
+}

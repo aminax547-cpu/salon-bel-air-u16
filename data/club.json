@@ -1,0 +1,66 @@
+{
+  "club": {
+    "nom": "Salon Bel Air Foot",
+    "ville": "Salon-de-Provence",
+    "stade": "Stade Marcel Roustan",
+    "stadeAdresse": "Avenue Marcel Roustan, 13300 Salon-de-Provence",
+    "lat": 43.6476,
+    "lon": 5.1112,
+    "fondation": 1928,
+    "logo": ""
+  },
+  "categories": [
+    {
+      "id": "u16",
+      "libelle": "U16",
+      "nom": "U16 Départemental 2",
+      "poule": "Poule A",
+      "niveau": "District Provence",
+      "fichier": "data/u16.json",
+      "actif": true
+    },
+    {
+      "id": "u19",
+      "libelle": "U19",
+      "nom": "U19 Départemental 1",
+      "poule": "Poule A",
+      "niveau": "District Provence",
+      "fichier": "data/u19.json",
+      "actif": true
+    },
+    {
+      "id": "u17",
+      "libelle": "U17",
+      "nom": "U17 (à venir)",
+      "poule": "—",
+      "niveau": "—",
+      "fichier": null,
+      "actif": false
+    },
+    {
+      "id": "u14",
+      "libelle": "U14",
+      "nom": "U14 (à venir)",
+      "poule": "—",
+      "niveau": "—",
+      "fichier": null,
+      "actif": false
+    }
+  ],
+  "actualites": [
+    {
+      "date": "2026-09-27",
+      "categorie": "U16",
+      "titre": "Salon Bel Air U16 s'impose 3-0 contre MGCB FC 2",
+      "texte": "Deuxième victoire de rang pour les U16, qui restent invaincus à domicile avec déjà 2 clean sheets en 3 journées.",
+      "emoji": "⚽"
+    },
+    {
+      "date": "2026-09-26",
+      "categorie": "U19",
+      "titre": "U19 : défaite 4-2 à Saint Loup malgré une belle réaction",
+      "texte": "Menés rapidement, les U19 ont réagi en fin de match. Rendez-vous la semaine prochaine pour lancer la saison.",
+      "emoji": "💪"
+    }
+  ]
+}

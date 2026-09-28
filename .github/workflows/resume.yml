@@ -1,0 +1,27 @@
+name: Générer résumés IA
+on:
+  push:
+    paths: ['data/resume-input.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  resume:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Générer le résumé (IA ou template)
+        env:
+          IA_API_KEY: ${{ secrets.IA_API_KEY }}
+          IA_BASE_URL: ${{ secrets.IA_BASE_URL }}
+          IA_MODEL: ${{ secrets.IA_MODEL }}
+        run: node tools/generer-resume.mjs
+      - name: Commit si généré
+        run: |
+          if ! git diff --quiet; then
+            git config user.name "bot-articles"
+            git config user.email "bot@users.noreply.github.com"
+            git add -A
+            git commit -m "auto: génération résumé — $(date -u +%Y-%m-%d)"
+            git push
+          fi

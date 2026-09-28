@@ -1,0 +1,744 @@
+{
+  "competition": "U19 Départemental 1 — District Provence — 2026/27",
+  "poule": "POULE A",
+  "source": "FFF — epreuves.fff.fr (données officielles, SSR)",
+  "competionId": "457242",
+  "phase": 1,
+  "groupe": 1,
+  "libelle": "U19",
+  "updated": "2026-09-28T10:14:40.084Z",
+  "updatedLabel": "28 sept. 2026, 10:14",
+  "classement": [
+    {
+      "pos": 1,
+      "club": "O. CABRIES CALAS",
+      "pts": 6,
+      "j": 3,
+      "g": 2,
+      "n": 0,
+      "p": 1,
+      "bp": 11,
+      "bc": 5,
+      "diff": 6,
+      "evo": 5,
+      "serie": [
+        "V",
+        "V"
+      ],
+      "clCod": "524031",
+      "isBelAir": false
+    },
+    {
+      "pos": 2,
+      "club": "FC ST MITRE REMPARTS",
+      "pts": 6,
+      "j": 2,
+      "g": 2,
+      "n": 0,
+      "p": 0,
+      "bp": 5,
+      "bc": 1,
+      "diff": 4,
+      "evo": -1,
+      "serie": [
+        "V",
+        "V"
+      ],
+      "clCod": "553107",
+      "isBelAir": false
+    },
+    {
+      "pos": 3,
+      "club": "A.S.M SAINT LOUP 10E",
+      "pts": 6,
+      "j": 2,
+      "g": 2,
+      "n": 0,
+      "p": 0,
+      "bp": 7,
+      "bc": 4,
+      "diff": 3,
+      "evo": 2,
+      "serie": [
+        "V",
+        "V"
+      ],
+      "clCod": "539552",
+      "isBelAir": false
+    },
+    {
+      "pos": 4,
+      "club": "U.S. 1ER CANTON",
+      "pts": 4,
+      "j": 2,
+      "g": 1,
+      "n": 1,
+      "p": 0,
+      "bp": 11,
+      "bc": 5,
+      "diff": 6,
+      "evo": -2,
+      "serie": [
+        "V",
+        "N"
+      ],
+      "clCod": "524426",
+      "isBelAir": false
+    },
+    {
+      "pos": 5,
+      "club": "USPEG MARS",
+      "pts": 4,
+      "j": 2,
+      "g": 1,
+      "n": 1,
+      "p": 0,
+      "bp": 6,
+      "bc": 5,
+      "diff": 1,
+      "evo": -1,
+      "serie": [
+        "V",
+        "N"
+      ],
+      "clCod": "500092",
+      "isBelAir": false
+    },
+    {
+      "pos": 6,
+      "club": "LUYNES S.",
+      "pts": 3,
+      "j": 1,
+      "g": 1,
+      "n": 0,
+      "p": 0,
+      "bp": 5,
+      "bc": 3,
+      "diff": 2,
+      "evo": -3,
+      "serie": [
+        "V"
+      ],
+      "clCod": "508558",
+      "isBelAir": false
+    },
+    {
+      "pos": 7,
+      "club": "ET.S. FOSSEENNE",
+      "pts": 3,
+      "j": 2,
+      "g": 1,
+      "n": 0,
+      "p": 1,
+      "bp": 3,
+      "bc": 5,
+      "diff": -2,
+      "evo": 0,
+      "serie": [
+        "D",
+        "V"
+      ],
+      "clCod": "503061",
+      "isBelAir": false
+    },
+    {
+      "pos": 8,
+      "club": "SP.C. ST CANNAT",
+      "pts": 3,
+      "j": 2,
+      "g": 1,
+      "n": 0,
+      "p": 1,
+      "bp": 7,
+      "bc": 5,
+      "diff": 2,
+      "evo": 2,
+      "serie": [
+        "D",
+        "V"
+      ],
+      "clCod": "525115",
+      "isBelAir": false
+    },
+    {
+      "pos": 9,
+      "club": "EUGA ARDZIV",
+      "pts": 0,
+      "j": 2,
+      "g": 0,
+      "n": 0,
+      "p": 2,
+      "bp": 3,
+      "bc": 5,
+      "diff": -2,
+      "evo": 0,
+      "serie": [
+        "D",
+        "D"
+      ],
+      "clCod": "503073",
+      "isBelAir": false
+    },
+    {
+      "pos": 10,
+      "club": "U.S. TRETSOISE",
+      "pts": 0,
+      "j": 2,
+      "g": 0,
+      "n": 0,
+      "p": 2,
+      "bp": 3,
+      "bc": 6,
+      "diff": -3,
+      "evo": -2,
+      "serie": [
+        "D",
+        "D"
+      ],
+      "clCod": "503058",
+      "isBelAir": false
+    },
+    {
+      "pos": 11,
+      "club": "SALON BEL AIR FOOT",
+      "pts": 0,
+      "j": 2,
+      "g": 0,
+      "n": 0,
+      "p": 2,
+      "bp": 4,
+      "bc": 12,
+      "diff": -8,
+      "evo": 1,
+      "serie": [
+        "D",
+        "D"
+      ],
+      "clCod": "551298",
+      "isBelAir": true
+    },
+    {
+      "pos": 12,
+      "club": "A. S. MARTIGUES SUD",
+      "pts": 0,
+      "j": 2,
+      "g": 0,
+      "n": 0,
+      "p": 2,
+      "bp": 1,
+      "bc": 10,
+      "diff": -9,
+      "evo": -1,
+      "serie": [
+        "D",
+        "D"
+      ],
+      "clCod": "580438",
+      "isBelAir": false
+    }
+  ],
+  "prochainMatch": {
+    "journee": "J4",
+    "date": "03 oct. 2026",
+    "domicile": "Salon Bel Air Foot",
+    "exterieur": "Adversaire à venir",
+    "lieu": "Calendrier officiel — adversaire publié prochainement"
+  },
+  "dernierResultat": {
+    "journee": "J3",
+    "date": "26 sept. 2026",
+    "domicile": "A.S.M SAINT LOUP 10E",
+    "exterieur": "SALON BEL AIR FOOT",
+    "score": "4 — 2",
+    "victoire": false
+  },
+  "calendrier": [
+    {
+      "journee": "J1",
+      "date": "2026-09-12T00:00:00+00:00",
+      "passe": true,
+      "joue": true,
+      "adversaire": "U.S. 1ER CANTON",
+      "domicile": false,
+      "score": "8 — 2"
+    },
+    {
+      "journee": "J2",
+      "date": "2026-09-19T00:00:00+00:00",
+      "passe": true,
+      "joue": false,
+      "adversaire": "USPEG MARS",
+      "domicile": true,
+      "score": null
+    },
+    {
+      "journee": "J3",
+      "date": "2026-09-26T00:00:00+00:00",
+      "passe": true,
+      "joue": true,
+      "adversaire": "A.S.M SAINT LOUP 10E",
+      "domicile": false,
+      "score": "4 — 2"
+    },
+    {
+      "journee": "J4",
+      "date": "2026-10-03T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    },
+    {
+      "journee": "J5",
+      "date": "2026-10-10T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    },
+    {
+      "journee": "J6",
+      "date": "2026-11-07T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    },
+    {
+      "journee": "J7",
+      "date": "2026-11-14T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    },
+    {
+      "journee": "J8",
+      "date": "2026-11-28T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    },
+    {
+      "journee": "J9",
+      "date": "2026-12-05T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    },
+    {
+      "journee": "J10",
+      "date": "2026-12-12T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    },
+    {
+      "journee": "J11",
+      "date": "2027-01-09T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    },
+    {
+      "journee": "J12",
+      "date": "2027-01-16T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    },
+    {
+      "journee": "J13",
+      "date": "2027-01-30T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    },
+    {
+      "journee": "J14",
+      "date": "2027-02-06T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    },
+    {
+      "journee": "J15",
+      "date": "2027-02-13T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    },
+    {
+      "journee": "J16",
+      "date": "2027-03-13T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    },
+    {
+      "journee": "J17",
+      "date": "2027-03-20T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    },
+    {
+      "journee": "J18",
+      "date": "2027-03-27T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    },
+    {
+      "journee": "J19",
+      "date": "2027-04-03T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    },
+    {
+      "journee": "J20",
+      "date": "2027-04-10T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    },
+    {
+      "journee": "J21",
+      "date": "2027-05-08T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    },
+    {
+      "journee": "J22",
+      "date": "2027-05-15T00:00:00+00:00",
+      "passe": false,
+      "joue": false,
+      "adversaire": null,
+      "domicile": null,
+      "score": null
+    }
+  ],
+  "stats": {
+    "matchsJoues": 2,
+    "forme": [
+      {
+        "journee": "J3",
+        "adversaire": "A.S.M SAINT LOUP 10E",
+        "domicile": false,
+        "score": "4 — 2",
+        "resultat": "D",
+        "marques": 2,
+        "encaisses": 4
+      },
+      {
+        "journee": "J1",
+        "adversaire": "U.S. 1ER CANTON",
+        "domicile": false,
+        "score": "8 — 2",
+        "resultat": "D",
+        "marques": 2,
+        "encaisses": 8
+      }
+    ],
+    "serie": [
+      "D",
+      "D"
+    ],
+    "cleanSheets": 0,
+    "cleanSheetsPct": 0,
+    "moyenneMarques": 2,
+    "moyenneEncaisses": 6,
+    "domicile": {
+      "matchs": 0,
+      "victoires": 0,
+      "nuls": 0,
+      "defaites": 0,
+      "buts": 0
+    },
+    "exterieur": {
+      "matchs": 2,
+      "victoires": 0,
+      "nuls": 0,
+      "defaites": 2,
+      "buts": 4
+    }
+  },
+  "effectif": [
+    {
+      "numero": 1,
+      "nom": "ALEXANDRE C.",
+      "poste": "Titulaire",
+      "matchsJoues": 2,
+      "titularisations": 2,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 2,
+      "nom": "ALEXIS S.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 1,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 2,
+      "nom": "FLORIAN R.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 3,
+      "nom": "ENZO V.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 3,
+      "nom": "KILIAN B.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 4,
+      "nom": "KILIAN B.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 4,
+      "nom": "WASSIM H.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 5,
+      "nom": "GABRIEL T.",
+      "poste": "Titulaire",
+      "matchsJoues": 2,
+      "titularisations": 2,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 6,
+      "nom": "MATTHIEU T.",
+      "poste": "Titulaire",
+      "matchsJoues": 2,
+      "titularisations": 2,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 7,
+      "nom": "ILIAN S.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 7,
+      "nom": "YFTAHIE M.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 8,
+      "nom": "FLORIAN R.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 8,
+      "nom": "QUENTIN R.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 1,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 9,
+      "nom": "GAETAN L.",
+      "poste": "Titulaire",
+      "matchsJoues": 2,
+      "titularisations": 2,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 10,
+      "nom": "ANTHONY B.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 10,
+      "nom": "QUENTIN R.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 11,
+      "nom": "ANTHONY R.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 11,
+      "nom": "NOLAN D.",
+      "poste": "Titulaire",
+      "matchsJoues": 1,
+      "titularisations": 1,
+      "remplacements": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 12,
+      "nom": "ARNAUD L.",
+      "poste": "Remplaçant / titulaire",
+      "matchsJoues": 2,
+      "titularisations": 0,
+      "remplacements": 2,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 13,
+      "nom": "ARTHUR R.",
+      "poste": "Remplaçant / titulaire",
+      "matchsJoues": 1,
+      "titularisations": 0,
+      "remplacements": 1,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 13,
+      "nom": "ILIAN S.",
+      "poste": "Remplaçant / titulaire",
+      "matchsJoues": 1,
+      "titularisations": 0,
+      "remplacements": 1,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": 14,
+      "nom": "NOA B.",
+      "poste": "Remplaçant / titulaire",
+      "matchsJoues": 1,
+      "titularisations": 0,
+      "remplacements": 1,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 0
+    }
+  ]
+}

@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Salon Bel Air Foot — U16 D2 2026/27 — Classement</title>
-<meta name="description" content="Salon Bel Air Foot — Classement officiel U16 Départemental 2 — District Provence — Saison 2026/27. Synchronisé avec les données FFF.">
+<title>Salon Bel Air Foot — La saison 2026/27 en direct</title>
+<meta name="description" content="Salon Bel Air Foot — classements officiels, statistiques et calendriers des équipes U16, U19 et plus. Salon-de-Provence.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
@@ -14,44 +14,44 @@
 <body>
 <div class="bg"></div>
 
-<div class="wrap">
-  <header>
-    <div class="brand">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#/">
       <div class="crest">SB<span>1928</span></div>
-      <h1>Salon Bel Air Foot <small>Salon-de-Provence · Depuis 1928</small></h1>
-    </div>
-    <div class="badge"><span class="dot"></span> U16 D2 — 2026/27 · LIVE</div>
-  </header>
+      <div class="brand-txt">
+        <h1>Salon Bel Air Foot</h1>
+        <small>Salon-de-Provence · Saison 2026/27</small>
+      </div>
+    </a>
 
-  <section class="hero">
-    <h2>Le classement.<br><em>Sans détour.</em></h2>
-    <p>Championnat <strong style="color:#fff">U16 Départemental 2</strong> — District Provence.<br>
-    Classement officiel FFF, synchronisé automatiquement après chaque week-end.</p>
-    <div class="hero-cta">
-      <a href="equipe.html" class="btn btn-primary">⭐ Fiche équipe U16</a>
-      <a href="https://epreuves.fff.fr/competition/engagement/457249-u16-departemental-2/phase/1/1" target="_blank" rel="noopener" class="btn btn-ghost">FFF officiel ↗</a>
-    </div>
-  </section>
+    <nav class="nav" id="nav">
+      <a href="#/" class="nav-link" data-nav="home">Accueil</a>
+      <div class="dropdown">
+        <button class="nav-link dropdown-btn" id="catBtn" aria-haspopup="true">
+          <span id="catBtnLabel">Équipes</span> <span class="chev">▾</span>
+        </button>
+        <div class="dropdown-menu" id="catMenu">
+          <a href="#/u16" class="dropdown-item" data-cat="u16"><b>U16</b><span>Départemental 2</span></a>
+          <a href="#/u19" class="dropdown-item" data-cat="u19"><b>U19</b><span>Départemental 1</span></a>
+          <div class="dropdown-sep"></div>
+          <a href="#/u17" class="dropdown-item disabled" data-cat="u17"><b>U17</b><span>Bientôt</span></a>
+          <a href="#/u14" class="dropdown-item disabled" data-cat="u14"><b>U14</b><span>Bientôt</span></a>
+        </div>
+      </div>
+    </nav>
 
-  <section id="classement" class="glass">
-    <div class="card-head">
-      <h3>🏆 Classement U16 D2 <span id="pouleLabel">— District Provence</span>
-        <span id="sourceHint" style="display:inline-flex;gap:10px"></span></h3>
-      <div class="meta">MAJ&nbsp;: <strong id="updated">—</strong></div>
-    </div>
-    <div class="table-wrap" id="tableWrap">
-      <div class="status"><div class="spinner"></div>Chargement du classement…</div>
-    </div>
-  </section>
+    <a class="btn btn-primary top-cta" href="#/u16">Voir le classement ↓</a>
+  </div>
+</header>
 
-  <div class="band" id="band"></div>
+<main class="wrap" id="app">
+  <div class="status"><div class="spinner"></div>Chargement…</div>
+</main>
 
-  <footer>
-    <strong>Salon Bel Air Foot</strong> — Stade Marcel Roustan · Salon-de-Provence (13)<br>
-    Site non officiel — données officielles FFF (U16 D2 — Poule A) · mise à jour automatique<br>
-    <a href="https://github.com/aminax547-cpu/salon-bel-air-u16" target="_blank" rel="noopener">Code source</a> · Prochainement : U14 / U17 / U19
-  </footer>
-</div>
+<footer class="foot">
+  <strong>Salon Bel Air Foot</strong> — Stade Marcel Roustan · Salon-de-Provence (13)<br>
+  Site non officiel · données officielles FFF (epreuves.fff.fr) · <a href="https://github.com/aminax547-cpu/salon-bel-air-u16" target="_blank" rel="noopener">Code source</a>
+</footer>
 
 <script type="module" src="app.js"></script>
 </body>
