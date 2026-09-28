@@ -1,0 +1,10 @@
+{
+  "_note": "FALLBACK SAISI PAR LE COACH — La FFF ne publie pas les buts/passes individuels pour les catégories jeunes. Ce fichier fusionne les statistiques manuelles avec l'effectif auto-extrait des feuilles de match. Le script fetch-fff.mjs lit ce fichier à chaque run : un push suffit pour mettre à jour le site.",
+  "joueurs": [
+    { "prenom": "LISANDRO", "nom": "F.", "poste": "Défenseur", "buts": 2, "passes": 0 },
+    { "prenom": "LUCAS", "nom": "B.", "poste": "Attaquant", "buts": 3, "passes": 1 },
+    { "prenom": "SANDRO", "nom": "J.", "poste": "Milieu", "buts": 0, "passes": 2 },
+    { "prenom": "YOUSSEF", "nom": "F.", "poste": "Attaquant", "buts": 4, "passes": 0 },
+    { "prenom": "HAMZA", "nom": "B.", "poste": "Milieu", "buts": 1, "passes": 3 }
+  ]
+}

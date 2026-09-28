@@ -1,13 +1,13 @@
 {
   "competition": "U19 Départemental 1 — District Provence — 2026/27",
   "poule": "POULE A",
-  "source": "FFF — epreuves.fff.fr (données officielles, SSR)",
+  "source": "FFF — epreuves.fff.fr (données officielles, SSR) + staff-input.json",
   "competionId": "457242",
   "phase": 1,
   "groupe": 1,
   "libelle": "U19",
-  "updated": "2026-09-28T10:14:40.084Z",
-  "updatedLabel": "28 sept. 2026, 10:14",
+  "updated": "2026-09-28T12:25:37.030Z",
+  "updatedLabel": "28 sept. 2026, 12:25",
   "classement": [
     {
       "pos": 1,
@@ -239,10 +239,12 @@
   ],
   "prochainMatch": {
     "journee": "J4",
-    "date": "03 oct. 2026",
+    "date": "2026-10-03T00:00:00+00:00",
+    "heure": "16:00",
     "domicile": "Salon Bel Air Foot",
-    "exterieur": "Adversaire à venir",
-    "lieu": "Calendrier officiel — adversaire publié prochainement"
+    "exterieur": "FC ST MITRE REMPARTS",
+    "lieu": "STADE DIMITRI PAYET",
+    "gps": "43.6487951,5.1001995"
   },
   "dernierResultat": {
     "journee": "J3",
@@ -254,202 +256,334 @@
   },
   "calendrier": [
     {
+      "id": "match_j1",
       "journee": "J1",
       "date": "2026-09-12T00:00:00+00:00",
+      "heure": null,
+      "statut": "joue",
       "passe": true,
       "joue": true,
-      "adversaire": "U.S. 1ER CANTON",
       "domicile": false,
-      "score": "8 — 2"
+      "exterieur": "U.S. 1ER CANTON",
+      "adversaire": "U.S. 1ER CANTON",
+      "score": "8 — 2",
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j2",
       "journee": "J2",
       "date": "2026-09-19T00:00:00+00:00",
+      "heure": null,
+      "statut": "passe",
       "passe": true,
       "joue": false,
-      "adversaire": "USPEG MARS",
-      "domicile": true,
-      "score": null
+      "domicile": null,
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j3",
       "journee": "J3",
       "date": "2026-09-26T00:00:00+00:00",
+      "heure": null,
+      "statut": "joue",
       "passe": true,
       "joue": true,
-      "adversaire": "A.S.M SAINT LOUP 10E",
       "domicile": false,
-      "score": "4 — 2"
+      "exterieur": "A.S.M SAINT LOUP 10E",
+      "adversaire": "A.S.M SAINT LOUP 10E",
+      "score": "4 — 2",
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j4",
       "journee": "J4",
       "date": "2026-10-03T00:00:00+00:00",
+      "heure": "16:00",
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
-      "domicile": null,
-      "score": null
+      "domicile": true,
+      "exterieur": "FC ST MITRE REMPARTS",
+      "adversaire": "FC ST MITRE REMPARTS",
+      "score": null,
+      "lieu": "STADE DIMITRI PAYET",
+      "gps": "43.6487951,5.1001995"
     },
     {
+      "id": "match_j5",
       "journee": "J5",
       "date": "2026-10-10T00:00:00+00:00",
+      "heure": null,
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
       "domicile": null,
-      "score": null
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j6",
       "journee": "J6",
       "date": "2026-11-07T00:00:00+00:00",
+      "heure": null,
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
       "domicile": null,
-      "score": null
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j7",
       "journee": "J7",
       "date": "2026-11-14T00:00:00+00:00",
+      "heure": null,
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
       "domicile": null,
-      "score": null
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j8",
       "journee": "J8",
       "date": "2026-11-28T00:00:00+00:00",
+      "heure": null,
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
       "domicile": null,
-      "score": null
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j9",
       "journee": "J9",
       "date": "2026-12-05T00:00:00+00:00",
+      "heure": null,
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
       "domicile": null,
-      "score": null
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j10",
       "journee": "J10",
       "date": "2026-12-12T00:00:00+00:00",
+      "heure": null,
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
       "domicile": null,
-      "score": null
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j11",
       "journee": "J11",
       "date": "2027-01-09T00:00:00+00:00",
+      "heure": null,
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
       "domicile": null,
-      "score": null
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j12",
       "journee": "J12",
       "date": "2027-01-16T00:00:00+00:00",
+      "heure": null,
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
       "domicile": null,
-      "score": null
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j13",
       "journee": "J13",
       "date": "2027-01-30T00:00:00+00:00",
+      "heure": null,
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
       "domicile": null,
-      "score": null
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j14",
       "journee": "J14",
       "date": "2027-02-06T00:00:00+00:00",
+      "heure": null,
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
       "domicile": null,
-      "score": null
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j15",
       "journee": "J15",
       "date": "2027-02-13T00:00:00+00:00",
+      "heure": null,
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
       "domicile": null,
-      "score": null
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j16",
       "journee": "J16",
       "date": "2027-03-13T00:00:00+00:00",
+      "heure": null,
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
       "domicile": null,
-      "score": null
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j17",
       "journee": "J17",
       "date": "2027-03-20T00:00:00+00:00",
+      "heure": null,
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
       "domicile": null,
-      "score": null
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j18",
       "journee": "J18",
       "date": "2027-03-27T00:00:00+00:00",
+      "heure": null,
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
       "domicile": null,
-      "score": null
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j19",
       "journee": "J19",
       "date": "2027-04-03T00:00:00+00:00",
+      "heure": null,
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
       "domicile": null,
-      "score": null
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j20",
       "journee": "J20",
       "date": "2027-04-10T00:00:00+00:00",
+      "heure": null,
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
       "domicile": null,
-      "score": null
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j21",
       "journee": "J21",
       "date": "2027-05-08T00:00:00+00:00",
+      "heure": null,
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
       "domicile": null,
-      "score": null
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     },
     {
+      "id": "match_j22",
       "journee": "J22",
       "date": "2027-05-15T00:00:00+00:00",
+      "heure": null,
+      "statut": "a_venir",
       "passe": false,
       "joue": false,
-      "adversaire": null,
       "domicile": null,
-      "score": null
+      "exterieur": null,
+      "adversaire": null,
+      "score": null,
+      "lieu": null,
+      "gps": null
     }
   ],
   "stats": {
@@ -505,6 +639,8 @@
       "matchsJoues": 2,
       "titularisations": 2,
       "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -516,6 +652,8 @@
       "matchsJoues": 1,
       "titularisations": 1,
       "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 1,
       "buts": 0,
       "passes": 0
@@ -527,6 +665,8 @@
       "matchsJoues": 1,
       "titularisations": 1,
       "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -538,6 +678,8 @@
       "matchsJoues": 1,
       "titularisations": 1,
       "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -549,6 +691,8 @@
       "matchsJoues": 1,
       "titularisations": 1,
       "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -560,6 +704,8 @@
       "matchsJoues": 1,
       "titularisations": 1,
       "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -571,6 +717,8 @@
       "matchsJoues": 1,
       "titularisations": 1,
       "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -582,6 +730,8 @@
       "matchsJoues": 2,
       "titularisations": 2,
       "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -593,6 +743,8 @@
       "matchsJoues": 2,
       "titularisations": 2,
       "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -604,6 +756,8 @@
       "matchsJoues": 1,
       "titularisations": 1,
       "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -615,6 +769,8 @@
       "matchsJoues": 1,
       "titularisations": 1,
       "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -626,6 +782,8 @@
       "matchsJoues": 1,
       "titularisations": 1,
       "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -637,6 +795,8 @@
       "matchsJoues": 1,
       "titularisations": 1,
       "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 1,
       "buts": 0,
       "passes": 0
@@ -648,6 +808,8 @@
       "matchsJoues": 2,
       "titularisations": 2,
       "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -659,6 +821,8 @@
       "matchsJoues": 1,
       "titularisations": 1,
       "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -670,6 +834,8 @@
       "matchsJoues": 1,
       "titularisations": 1,
       "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -681,6 +847,8 @@
       "matchsJoues": 1,
       "titularisations": 1,
       "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -692,6 +860,8 @@
       "matchsJoues": 1,
       "titularisations": 1,
       "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -703,6 +873,8 @@
       "matchsJoues": 2,
       "titularisations": 0,
       "remplacements": 2,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -714,6 +886,8 @@
       "matchsJoues": 1,
       "titularisations": 0,
       "remplacements": 1,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -725,6 +899,8 @@
       "matchsJoues": 1,
       "titularisations": 0,
       "remplacements": 1,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
       "passes": 0
@@ -736,8 +912,75 @@
       "matchsJoues": 1,
       "titularisations": 0,
       "remplacements": 1,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
       "cartons": 0,
       "buts": 0,
+      "passes": 0
+    },
+    {
+      "numero": null,
+      "nom": "HAMZA B.",
+      "poste": "Milieu",
+      "matchsJoues": 0,
+      "titularisations": 0,
+      "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
+      "cartons": 0,
+      "buts": 1,
+      "passes": 3
+    },
+    {
+      "numero": null,
+      "nom": "LISANDRO F.",
+      "poste": "Défenseur",
+      "matchsJoues": 0,
+      "titularisations": 0,
+      "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
+      "cartons": 0,
+      "buts": 2,
+      "passes": 0
+    },
+    {
+      "numero": null,
+      "nom": "LUCAS B.",
+      "poste": "Attaquant",
+      "matchsJoues": 0,
+      "titularisations": 0,
+      "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
+      "cartons": 0,
+      "buts": 3,
+      "passes": 1
+    },
+    {
+      "numero": null,
+      "nom": "SANDRO J.",
+      "poste": "Milieu",
+      "matchsJoues": 0,
+      "titularisations": 0,
+      "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
+      "cartons": 0,
+      "buts": 0,
+      "passes": 2
+    },
+    {
+      "numero": null,
+      "nom": "YOUSSEF F.",
+      "poste": "Attaquant",
+      "matchsJoues": 0,
+      "titularisations": 0,
+      "remplacements": 0,
+      "cartonsJaunes": 0,
+      "cartonsRouges": 0,
+      "cartons": 0,
+      "buts": 4,
       "passes": 0
     }
   ]

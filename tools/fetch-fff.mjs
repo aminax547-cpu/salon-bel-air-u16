@@ -173,7 +173,7 @@ async function fetchMatchSquad(matchId, clubCible) {
     const html = await fetchPage(url);
     const state = extractNgState(html);
     const body = stateValue(state, `/matches/${matchId}`);
-    if (!body) return { joueurs: [], adversaire: null, score: null, joue: false, journee: null, domicile: null };
+    if (!body) return { joueurs: [], adversaire: null, score: null, joue: false, journee: null, domicile: null, stade: null, gps: null, heure: null, statut: null };
     const df = body.donneesFormatees || body;
     const joueurs = [];
     let adversaire = null, domicile = null;
@@ -202,17 +202,40 @@ async function fetchMatchSquad(matchId, clubCible) {
       joue && df.recevant?.buts != null && df.visiteur?.buts != null
         ? `${df.recevant.buts} — ${df.visiteur.buts}`
         : null;
+    // SBA joue-t-elle réellement dans ce match ?
+    const sbaEnJeu = joueurs.length > 0 || (df.recevant?.club?.nom || '').toUpperCase().includes(clubCible.toUpperCase()) || (df.visiteur?.club?.nom || '').toUpperCase().includes(clubCible.toUpperCase());
+
+    // stade + GPS (brief : lieu + coordonnées) — le champ FFF est "long", pas "lon"
+    const stadeObj = df.stade || {};
+    const stade = stadeObj.nom || null;
+    const adresseStade = Array.isArray(stadeObj.adresse) ? stadeObj.adresse.join(', ') : '';
+    const latSt = stadeObj.lat != null ? String(stadeObj.lat) : null;
+    const lonSt = stadeObj.long != null ? String(stadeObj.long) : (stadeObj.lon != null ? String(stadeObj.lon) : null);
+    const gps = latSt && lonSt ? `${latSt},${lonSt}` : null;
+
+    // heure de coup d'envoi (heure locale)
+    let heure = null;
+    if (df.date) {
+      try {
+        heure = new Date(df.date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+      } catch (_) { /* ignore */ }
+    }
+
     return {
       joueurs,
       adversaire,
       score,
       joue,
-      journee: df.journee?.pjNo != null ? num(df.journee.pjNo) : null,
+      journee: sbaEnJeu && df.journee?.pjNo != null ? num(df.journee.pjNo) : null,
       domicile,
+      stade: stade || adresseStade || null,
+      gps,
+      heure,
+      statut: df.maStatutLib || (joue ? 'joué' : 'à venir'),
     };
   } catch (e) {
     console.warn(`  (match ${matchId} indisponible : ${e.message})`);
-    return { joueurs: [], adversaire: null, score: null, joue: false, journee: null, domicile: null };
+    return { joueurs: [], adversaire: null, score: null, joue: false, journee: null, domicile: null, stade: null, gps: null, heure: null, statut: null };
   }
 }
 
@@ -240,7 +263,9 @@ function compileSquad(nouveauxMatchs, matchIdsDejaTraites) {
       matchsJoues: j.matchsJoues ?? 0,
       titularisations: j.titularisations ?? 0,
       remplacements: j.remplacements ?? 0,
-      cartons: j.cartons ?? 0,
+      cartonsJaunes: j.cartonsJaunes ?? 0,
+      cartonsRouges: j.cartonsRouges ?? 0,
+      cartons: j.cartons ?? ((j.cartonsJaunes ?? 0) + (j.cartonsRouges ?? 0)),
       buts: j.buts ?? 0,
       passes: j.passes ?? 0,
     });
@@ -253,13 +278,18 @@ function compileSquad(nouveauxMatchs, matchIdsDejaTraites) {
       const key = `${p.maillot ?? ''}|${nomComplet}`;
       const cur = map.get(key) || {
         numero: p.maillot, nom: nomComplet, poste: 'Effectif',
-        matchsJoues: 0, titularisations: 0, remplacements: 0, cartons: 0,
+        matchsJoues: 0, titularisations: 0, remplacements: 0,
+        cartonsJaunes: 0, cartonsRouges: 0, cartons: 0,
         buts: 0, passes: 0,
       };
       cur.matchsJoues += 1;
       if (p.type === 'titulaire') cur.titularisations += 1;
       else cur.remplacements += 1;
-      cur.cartons += (p.momentsForts || []).filter((m) => m === 'carton-jaune' || m === 'carton-rouge').length;
+      const j = (p.momentsForts || []).filter((m) => m === 'carton-jaune').length;
+      const r = (p.momentsForts || []).filter((m) => m === 'carton-rouge').length;
+      cur.cartonsJaunes += j;
+      cur.cartonsRouges += r;
+      cur.cartons += j + r;
       if (cur.numero == null) cur.numero = p.maillot;
       map.set(key, cur);
     }
@@ -274,6 +304,8 @@ function compileSquad(nouveauxMatchs, matchIdsDejaTraites) {
       matchsJoues: p.matchsJoues,
       titularisations: p.titularisations,
       remplacements: p.remplacements,
+      cartonsJaunes: p.cartonsJaunes,
+      cartonsRouges: p.cartonsRouges,
       cartons: p.cartons,
       buts: p.buts,
       passes: p.passes,
@@ -431,7 +463,7 @@ async function main() {
   }
   let nouveaux = 0;
   const nouveauIds = [];
-  const infosMatchsScan = new Map(); // pjNo -> {adversaire, score, joue, domicile} issus du scan
+  const infosMatchsScan = new Map(); // pjNo -> {adversaire, score, joue, domicile, stade, gps, heure, statut, date}
   for (const id of matchIdsCibles) {
     if (matchIdsTraites.has(id)) continue; // déjà compté dans l'effectif existant
     const info = await fetchMatchSquad(id, 'SALON BEL AIR');
@@ -439,12 +471,16 @@ async function main() {
       matchsAvecCompo.push({ matchId: id, joueurs: info.joueurs });
       nouveauIds.push(id);
       nouveaux++;
-      if (info.journee && info.adversaire) {
+      if (info.journee) {
         infosMatchsScan.set(info.journee, {
           adversaire: info.adversaire,
           score: info.score,
           joue: info.joue,
           domicile: info.domicile,
+          stade: info.stade,
+          gps: info.gps,
+          heure: info.heure,
+          statut: info.statut,
         });
       }
       console.log(`  ✓ match ${id} → ${info.joueurs.length} joueurs (nouveau)`);
@@ -471,11 +507,56 @@ async function main() {
           score: info.score,
           joue: info.joue,
           domicile: info.domicile,
+          stade: info.stade,
+          gps: info.gps,
+          heure: info.heure,
+          statut: info.statut,
         });
         console.log(`  ✓ infos match ${id} (${info.adversaire} ${info.score || ''})`);
       }
       await attente(150);
     }
+  }
+
+  // 3ter. MATCHS FUTURS — scan des journées à venir.
+  // Les IDs de matchs FFF étant consécutifs par journée (6 matchs/journée, +6 en
+  // général entre deux journées), on scanne les blocs suivant le dernier ID connu
+  // (feuilles jouées + snapshot) jusqu'à trouver les matchs de SBA "à venir"
+  // (date future, statut à venir) avec leur stade/GPS/heure (brief Module 3).
+  console.log('→ Scan des prochains matchs (futurs)…');
+  const derniereJourneeJouee = Math.max(0, ...[...infosMatchsScan.keys(), ...snapshotPj].filter((p) => Number.isFinite(p)));
+  const idsConnusTous = [...matchIdsCibles, ...matchs.filter(isBelAirMatch).map((m) => m.maNo)].filter(Boolean);
+  const maxIdConnu = idsConnusTous.length ? Math.max(...idsConnusTous) : 0;
+  // on scanne jusqu'à ~14 IDs après le dernier connu (≈ 2-3 journées de matchs)
+  const scanFin = maxIdConnu + 16;
+  for (let id = maxIdConnu + 1; id <= scanFin; id++) {
+    if (infosMatchsScan.size > 0 && id - maxIdConnu > 14) break;
+    let info = null;
+    for (let essai = 0; essai < 2 && !info; essai++) {
+      info = await fetchMatchSquad(id, 'SALON BEL AIR');
+      if (!info.journee) { info = null; await attente(250); }
+    }
+    if (info && info.journee) {
+      if (info.journee > derniereJourneeJouee && info.adversaire) {
+        if (!infosMatchsScan.has(info.journee)) {
+          infosMatchsScan.set(info.journee, {
+            adversaire: info.adversaire,
+            score: info.score,
+            joue: info.joue,
+            domicile: info.domicile,
+            stade: info.stade,
+            gps: info.gps,
+            heure: info.heure,
+            statut: info.statut,
+          });
+          console.log(`  📅 match futur ${id} (J${info.journee}) : ${info.domicile ? 'SBA' : info.adversaire} vs ${info.domicile ? info.adversaire : 'SBA'} — ${info.heure} — ${info.stade || ''} ${info.gps ? `(${info.gps})` : ''}`);
+        }
+        // on a trouvé 2 journées futures complètes : stop le scan (économise le rate-limit)
+        const nbFuturesTrouvees = [...infosMatchsScan.keys()].filter((p) => p > derniereJourneeJouee).length;
+        if (nbFuturesTrouvees >= 2) break;
+      }
+    }
+    await attente(150);
   }
 
   // 3ter. calendrier complet : journées officielles + matchs connus
@@ -490,13 +571,19 @@ async function main() {
       const scan = infosMatchsScan.get(j.pjNo);
       if (scan) {
         return {
+          id: `match_j${j.pjNo}`,
           journee: `J${j.pjNo}`,
           date: j.date,
+          heure: scan.heure,
+          statut: scan.joue ? 'joue' : (scan.statut === 'à venir' ? 'a_venir' : (new Date(j.date) < new Date(Date.now() - 12 * 3600 * 1000) ? 'passe' : 'a_venir')),
           passe: new Date(j.date) < new Date(Date.now() - 12 * 3600 * 1000),
           joue: scan.joue,
-          adversaire: scan.adversaire,
           domicile: scan.domicile,
+          exterieur: scan.adversaire,
+          adversaire: scan.adversaire,
           score: scan.score,
+          lieu: scan.stade,
+          gps: scan.gps,
         };
       }
       // priorité 2 : snapshot du SSR (semaine active)
@@ -504,21 +591,31 @@ async function main() {
       const now = new Date();
       const dateJ = new Date(j.date);
       return {
+        id: `match_j${j.pjNo}`,
         journee: `J${j.pjNo}`,
         date: j.date,
+        heure: m?.heure ?? null,
+        statut: m ? (m.joue ? 'joue' : 'a_venir') : (dateJ < new Date(now.getTime() - 12 * 3600 * 1000) ? 'passe' : 'a_venir'),
         passe: dateJ < new Date(now.getTime() - 12 * 3600 * 1000),
         joue: m ? m.joue : false,
-        adversaire: m
-          ? (m.recevant.club || m.visiteur.club || '—').toUpperCase().includes('SALON BEL AIR')
-            ? m.visiteur.club || m.recevant.club
-            : m.recevant.club || m.visiteur.club
-          : null,
         domicile: m
           ? (m.recevant.club || '').toUpperCase().includes('SALON BEL AIR')
             ? true
             : false
           : null,
+        exterieur: m
+          ? (m.recevant.club || m.visiteur.club || '—').toUpperCase().includes('SALON BEL AIR')
+            ? m.visiteur.club || m.recevant.club
+            : m.recevant.club || m.visiteur.club
+          : null,
+        adversaire: m
+          ? (m.recevant.club || m.visiteur.club || '—').toUpperCase().includes('SALON BEL AIR')
+            ? m.visiteur.club || m.recevant.club
+            : m.recevant.club || m.visiteur.club
+          : null,
         score: m && m.recevant.buts !== null ? `${m.recevant.buts} — ${m.visiteur.buts}` : null,
+        lieu: null,
+        gps: null,
       };
     });
 
@@ -526,9 +623,27 @@ async function main() {
   const dernier = belAirMatchs.find((m) => m.joue && m.recevant.buts !== null);
   let prochain = belAirMatchs.find((m) => !m.joue);
 
+  // le prochain match du scan futur (le plus tôt, date > maintenant)
+  const futurs = [...infosMatchsScan.entries()]
+    .map(([pj, info]) => ({ pj, info }))
+    .filter((x) => !x.info.joue && x.info.adversaire)
+    .sort((a, b) => a.pj - b.pj);
+  const prochainFutur = futurs[0];
+
   // 3bis. Si le prochain match n'est pas encore publié (adversaires à venir),
   // on déduit la prochaine journée du calendrier officiel (date connue).
-  if (!prochain) {
+  if (!prochain && prochainFutur) {
+    prochain = {
+      pjNo: prochainFutur.pj,
+      date: prochainFutur.info.date || journees.find((j) => j.pjNo === prochainFutur.pj)?.date || null,
+      recevant: { club: prochainFutur.info.domicile ? 'Salon Bel Air Foot' : prochainFutur.info.adversaire },
+      visiteur: { club: prochainFutur.info.domicile ? prochainFutur.info.adversaire : 'Salon Bel Air Foot' },
+      lieu: prochainFutur.info.stade || 'Adresse à confirmer',
+      gps: prochainFutur.info.gps,
+      heure: prochainFutur.info.heure,
+      aVenirCalendrier: false,
+    };
+  } else if (!prochain) {
     const now = new Date();
     const tomorrow = new Date(now.getTime() + 24 * 3600 * 1000);
     const upcoming = journees
@@ -544,6 +659,43 @@ async function main() {
         aVenirCalendrier: true,
       };
     }
+  }
+  // injecter date ISO complète + lieu/gps si présent
+  if (prochain && !prochain.dateISO) {
+    const jDate = (prochain.pjNo && journees.find((j) => j.pjNo === prochain.pjNo)) || null;
+    if (jDate) prochain.dateISO = jDate.date;
+  }
+
+  // 4quater. Fusion mémoire : le WAF FFF est instable → si un run échoue à
+  // retrouver un match futur déjà connu (lieu/gps/adversaire), on le conserve.
+  if (existsSync(OUT)) {
+    try {
+      const prev = JSON.parse(readFileSync(OUT, 'utf-8'));
+      const prevCal = prev.calendrier || [];
+      for (let i = 0; i < calendrier.length; i++) {
+        const cur = calendrier[i];
+        if (cur.statut === 'a_venir' && !cur.exterieur) {
+          const old = prevCal.find((p) => p.journee === cur.journee && p.exterieur);
+          if (old) calendrier[i] = { ...cur, ...old };
+        }
+      }
+      // prochain match : si perdu par un run (adversaire à venir), on reprend l'ancien
+      if (!prochain || !prochain.exterieur || prochain.exterieur === 'Adversaire à venir') {
+        const oldNext = prev.prochainMatch;
+        if (oldNext && oldNext.exterieur && oldNext.exterieur !== 'Adversaire à venir') {
+          prochain = {
+            pjNo: parseInt((oldNext.journee || '').replace('J', ''), 10) || null,
+            date: oldNext.date,
+            dateISO: oldNext.date,
+            heure: oldNext.heure,
+            recevant: { club: oldNext.domicile },
+            visiteur: { club: oldNext.exterieur },
+            lieu: oldNext.lieu,
+            gps: oldNext.gps,
+          };
+        }
+      }
+    } catch (_) { /* ignore */ }
   }
 
   // 4. build du JSON
@@ -600,10 +752,69 @@ async function main() {
     };
   })();
 
+  // 4ter. Fallback staff-input.json — le coach peut forcer/saisir les buts et passes
+  // individuels (la FFF ne les publie pas pour les jeunes). Fusion par prénom+nom.
+  const staffInput = join(ROOT, 'data', 'staff-input.json');
+  let effectifFinal = effectif.effectif;
+  if (existsSync(staffInput)) {
+    try {
+      const staff = JSON.parse(readFileSync(staffInput, 'utf-8'));
+      if (Array.isArray(staff.joueurs)) {
+        const staffMap = new Map();
+        for (const j of staff.joueurs) {
+          const cle = `${(j.prenom || '').toUpperCase()}|${(j.nom || '').toUpperCase()}`;
+          staffMap.set(cle, j);
+        }
+        effectifFinal = effectif.effectif.map((p) => {
+          const [prenom, ...rest] = (p.nom || '').split(' ');
+          const nomJ = rest.join(' ');
+          const cle = `${(prenom || '').toUpperCase()}|${(nomJ || '').toUpperCase()}`;
+          const s = staffMap.get(cle);
+          if (s) {
+            return {
+              ...p,
+              buts: s.buts ?? p.buts ?? 0,
+              passes: s.passes ?? p.passes ?? 0,
+              poste: s.poste || p.poste,
+            };
+          }
+          return p;
+        });
+        // joueurs supplémentaires présents dans staff mais pas dans les feuilles
+        for (const s of staff.joueurs || []) {
+          const dejaIn = effectifFinal.some((p) => {
+            const [prenom, ...rest] = (p.nom || '').split(' ');
+            return `${(prenom || '').toUpperCase()}|${(rest.join(' ') || '').toUpperCase()}` ===
+              `${(s.prenom || '').toUpperCase()}|${(s.nom || '').toUpperCase()}`;
+          });
+          if (!dejaIn) {
+            effectifFinal.push({
+              numero: s.numero ?? null,
+              nom: `${s.prenom || ''} ${s.nom || ''}`.trim(),
+              poste: s.poste || 'Effectif',
+              matchsJoues: s.matchs_joues ?? 0,
+              titularisations: 0,
+              remplacements: 0,
+              cartonsJaunes: s.cartons_jaunes ?? 0,
+              cartonsRouges: s.cartons_rouges ?? 0,
+              cartons: (s.cartons_jaunes ?? 0) + (s.cartons_rouges ?? 0),
+              buts: s.buts ?? 0,
+              passes: s.passes ?? 0,
+            });
+          }
+        }
+        console.log(`  (staff-input.json appliqué : ${(staff.joueurs || []).length} joueurs gérés par le coach)`);
+      }
+    } catch (e) {
+      console.warn('  staff-input.json invalide :', e.message);
+    }
+  }
+  effectifFinal = effectifFinal.sort((a, b) => (a.numero ?? 99) - (b.numero ?? 99) || a.nom.localeCompare(b.nom));
+
   const data = {
     competition: NOM_COMPETITION,
     poule: pouleNomOfficiel,
-    source: 'FFF — epreuves.fff.fr (données officielles, SSR)',
+    source: 'FFF — epreuves.fff.fr (données officielles, SSR) + staff-input.json',
     competionId: CPNO,
     phase: PHASE,
     groupe: gpNo,
@@ -622,12 +833,14 @@ async function main() {
             : prochain.journee
               ? `J${prochain.journee}`
               : null,
-          date: prochain.date,
+          date: prochain.dateISO || prochain.date,
+          heure: prochain.heure || null,
           domicile: prochain.recevant.club,
           exterieur: prochain.visiteur.club,
-          lieu: prochain.aVenirCalendrier
+          lieu: prochain.lieu || (prochain.aVenirCalendrier
             ? 'Calendrier officiel — adversaire publié prochainement'
-            : 'À confirmer — Stade Marcel Roustan',
+            : 'À confirmer — Stade Marcel Roustan'),
+          gps: prochain.gps || null,
         }
       : null,
     dernierResultat: dernier
@@ -645,7 +858,7 @@ async function main() {
       : null,
     calendrier,
     stats,
-    effectif: effectif.effectif,
+    effectif: effectifFinal,
   };
 
   // Ne pas changer le timestamp si le classement n'a pas bougé (évite les commits inutiles)

@@ -178,8 +178,16 @@ async function renderCat(app, cat) {
     setTimeout(() => tabBox.classList.remove('fade-in'), 350);
     if (name === 'classement') tabBox.innerHTML = buildClassement(d);
     else if (name === 'stats') tabBox.innerHTML = buildStats(d, cat);
-    else if (name === 'calendrier') tabBox.innerHTML = buildCalendrier(d);
-    else if (name === 'equipe') tabBox.innerHTML = buildEquipe(d, cat);
+    else if (name === 'calendrier') { tabBox.innerHTML = buildCalendrier(d); bindCountdown(); }
+    else if (name === 'equipe') {
+      // on passe l'effectif (JSON principal + joueurs dédiés) au tri
+      const joueurs = (d.effectif || []).slice();
+      tabBox.innerHTML = buildEquipe(d, cat);
+      bindSquadSorts(joueurs, tabBox);
+    }
+  }
+  function bindCountdown() {
+    if (window.__cdTarget) { refreshCountdown(); if (countdownTimer) clearInterval(countdownTimer); countdownTimer = setInterval(refreshCountdown, 1000); }
   }
   document.querySelectorAll('#catTabs .tab').forEach((t) =>
     t.addEventListener('click', () => showTab(t.dataset.tab))
@@ -329,8 +337,8 @@ function buildCalendrier(d) {
   let html = '';
 
   if (next) {
-    const lieu = next.lieu || 'Salon-de-Provence';
-    const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(lieu)}`;
+    const mapsQuery = next.gps || next.lieu || 'Salon-de-Provence';
+    const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(mapsQuery)}`;
     const ics = makeICS(next);
     const icsData = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
     html += `
@@ -340,9 +348,10 @@ function buildCalendrier(d) {
         <div style="padding:18px 20px">
           <div class="versus">
             <div class="vs-team"><div class="vs-crest">SB</div><b>${esc(next.domicile)}</b></div>
-            <div class="vs-mid"><div class="vs-score">VS</div><div class="vs-date">${esc(dateLongue(next.date))}</div></div>
+            <div class="vs-mid"><div class="vs-score">VS</div><div class="vs-date">${esc(dateLongue(next.date))}${next.heure ? ' · ' + esc(next.heure) : ''}</div></div>
             <div class="vs-team"><div class="vs-crest dim">?</div><b>${esc(next.exterieur)}</b></div>
           </div>
+          ${next.lieu ? `<div style="text-align:center;color:var(--muted);font-size:.78rem">📍 ${esc(next.lieu)}</div>` : ''}
           <div class="cd-box" id="cdBox"></div>
           <div id="wdBox" style="text-align:center;margin-top:8px"></div>
           <div class="vs-actions">
@@ -353,35 +362,72 @@ function buildCalendrier(d) {
       </div>`;
   }
 
-  html += `<div class="glass-in" style="margin-top:16px">
-    <div class="card-head"><h3>🗓️ Toutes les journées</h3><div class="meta">dates officielles FFF</div></div>
-    <div class="cal-list">`;
-  for (const j of rows) {
-    let tag;
-    if (j.joue && j.score) tag = '<span class="cal-tag done">Joué</span>';
-    else if (j.passe) tag = '<span class="cal-tag done">Passé</span>';
-    else tag = '<span class="cal-tag up">À venir</span>';
+  // Deux sections : matchs joués / prochains rendez-vous (brief §3A)
+  const joues = rows.filter((j) => j.statut === 'joue' || (j.joue && j.score));
+  const futurs = rows.filter((j) => j.statut === 'a_venir');
 
-    const meu = j.adversaire || '<span style="color:var(--muted)">adversaire à venir</span>';
-    const dom = j.domicile ? '<b>Salon Bel Air</b>' : esc(meu);
-    const adv = j.domicile ? esc(meu) : '<b>Salon Bel Air</b>';
-
-    html += `<div class="cal-row">
-      <div><div class="cal-j">${esc(j.journee)}</div><div class="cal-date">${dateCourte(j.date)}</div></div>
-      <div class="cal-match"><span>${dom}</span> <span class="vs">vs</span> <span>${adv}</span></div>
-      ${j.score ? `<span class="cal-score">${esc(j.score)}</span>` : ''}
-      ${tag}
-    </div>`;
+  if (futurs.length) {
+    html += `<div class="glass-in" style="margin-top:16px">
+      <div class="card-head"><h3>📅 Prochains rendez-vous</h3><div class="meta">${futurs.length} matchs à venir</div></div>
+      <div class="cal-list">`;
+    for (const j of futurs) {
+      const mapsQuery = j.gps || j.lieu || 'Salon-de-Provence';
+      const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(mapsQuery)}`;
+      const icsData = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(makeICS(j));
+      const adv = j.domicile ? j.exterieur : j.adversaire;
+      html += `<div class="cal-row future">
+        <div><div class="cal-j">${esc(j.journee)}</div><div class="cal-date">${dateCourte(j.date)}${j.heure ? ' · ' + esc(j.heure) : ''}</div></div>
+        <div class="cal-match"><span>${j.domicile ? '<b>Salon Bel Air</b>' : esc(j.exterieur || '?')}</span> <span class="vs">vs</span> <span>${j.domicile ? esc(j.exterieur || '?') : '<b>Salon Bel Air</b>'}</span>
+          ${j.lieu ? `<small class="cal-lieu">📍 ${esc(j.lieu)}</small>` : ''}</div>
+        <span class="cal-tag up">À venir</span>
+        <span class="cal-actions">
+          <a class="btn btn-ghost btn-xs" target="_blank" rel="noopener" href="${mapsUrl}">📍</a>
+          <a class="btn btn-ghost btn-xs" href="${icsData}" download="match-${esc(j.journee)}.ics">📆</a>
+        </span>
+      </div>`;
+    }
+    html += '</div></div>';
   }
-  html += '</div></div>';
+
+  if (joues.length) {
+    html += `<div class="glass-in" style="margin-top:16px">
+      <div class="card-head"><h3>🏁 Matchs joués</h3><div class="meta">${joues.length} matchs</div></div>
+      <div class="cal-list">`;
+    for (const j of joues) {
+      const adv = j.domicile ? j.exterieur : j.adversaire;
+      html += `<div class="cal-row">
+        <div><div class="cal-j">${esc(j.journee)}</div><div class="cal-date">${dateCourte(j.date)}</div></div>
+        <div class="cal-match"><span>${j.domicile ? '<b>Salon Bel Air</b>' : esc(j.exterieur || '?')}</span> <span class="vs">vs</span> <span>${j.domicile ? esc(j.exterieur || '?') : '<b>Salon Bel Air</b>'}</span></div>
+        ${j.score ? `<span class="cal-score">${esc(j.score)}</span>` : '<span class="cal-tag done">—</span>'}
+        <span class="cal-tag done">Joué</span>
+      </div>`;
+    }
+    html += '</div></div>';
+  }
+
+  // Fallback si aucun match joué ni futur avec données
+  if (!joues.length && !futurs.length) {
+    html += `<div class="glass-in" style="margin-top:16px"><div class="card-head"><h3>🗓️ Calendrier officiel</h3></div>
+      <div class="cal-list">`;
+    for (const j of rows) {
+      html += `<div class="cal-row">
+        <div><div class="cal-j">${esc(j.journee)}</div><div class="cal-date">${dateCourte(j.date)}</div></div>
+        <div class="cal-match"><span>Salon Bel Air</span> <span class="vs">vs</span> <span>${esc(j.adversaire || '—')}</span></div>
+      </div>`;
+    }
+    html += '</div></div>';
+  }
+
   return html;
 }
 
 function makeICS(m) {
   const dt = new Date(m.date);
+  if (Number.isNaN(dt.getTime())) return 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nEND:VCALENDAR';
   const iso = dt.toISOString().replace(/[-:]/g, '').split('.')[0].replace(/Z$/, '');
   const end = new Date(dt.getTime() + 2 * 3600 * 1000).toISOString().replace(/[-:]/g, '').split('.')[0].replace(/Z$/, '');
-  const sum = `Salon Bel Air vs ${m.exterieur || '?'}`;
+  const sum = `Salon Bel Air vs ${m.exterieur || m.adversaire || '?'}`;
+  const lieu = m.lieu || 'Salon-de-Provence';
   return [
     'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//SBA//BelAir//FR',
     'BEGIN:VEVENT',
@@ -389,12 +435,40 @@ function makeICS(m) {
     `DTSTAMP:${iso}`,
     `DTSTART:${iso}`, `DTEND:${end}`,
     `SUMMARY:${sum}`,
-    `DESCRIPTION:${m.journee || ''} - ${m.lieu || 'Salon-de-Provence'}`,
+    `DESCRIPTION:${m.journee || ''} - ${lieu}`,
+    m.gps ? `LOCATION:${lieu} (${m.gps})` : `LOCATION:${lieu}`,
     'END:VEVENT', 'END:VCALENDAR', '',
   ].join('\r\n');
 }
 
-/* ---------------- Équipe / effectif ---------------- */
+/* ---------------- Équipe / effectif (cartes Panini + tri) ---------------- */
+function playerCard(p, rank) {
+  const med = ['🥇', '🥈', '🥉'];
+  const badge = rank < 3 && (p.buts || 0) > 0 ? med[rank] : '';
+  return `
+    <div class="p-card${rank < 3 && (p.buts || 0) > 0 ? ' top' : ''}">
+      <div class="p-card-head">
+        <div class="p-card-num">${esc(p.numero ?? '—')}</div>
+        <div class="p-card-badge">${badge}</div>
+      </div>
+      <div class="p-card-body">
+        <div class="p-card-avatar">${esc((p.nom || '?').charAt(0))}</div>
+        <div class="p-card-name">${esc(p.nom)}</div>
+        <div class="p-card-post">${esc(p.poste || 'Joueur')}</div>
+      </div>
+      <div class="p-card-stats">
+        <div class="pc-stat"><b>${p.matchsJoues ?? 0}</b><span>Matchs</span></div>
+        <div class="pc-stat"><b>${p.buts ?? 0}</b><span>Buts</span></div>
+        <div class="pc-stat"><b>${p.passes ?? 0}</b><span>Passes</span></div>
+      </div>
+      <div class="p-card-foot">
+        <span class="pj-jaune" title="Cartons jaunes">🟨 ${p.cartonsJaunes ?? 0}</span>
+        <span class="pj-rouge" title="Cartons rouges">🟥 ${p.cartonsRouges ?? 0}</span>
+        <span class="pj-tit" title="Titularisations">⚑ ${p.titularisations ?? 0}</span>
+      </div>
+    </div>`;
+}
+
 async function buildEquipe(d, cat) {
   let joueurs = [];
   try {
@@ -402,30 +476,54 @@ async function buildEquipe(d, cat) {
     const jd = await getJSON('./data/' + jf);
     joueurs = jd.joueurs || [];
   } catch (_) { /* pas de fichier joueurs */ }
+  // si l'effectif n'est pas dans le fichier dédié, on utilise celui du JSON principal
+  if (!joueurs.length && d.effectif?.length) joueurs = d.effectif;
 
-  let squadHtml = `<div class="squad-note">L'effectif est extrait des feuilles de match officielles FFF (composition). Les buts/passes sont à compléter par le staff dans <code>data/${cat.id}-joueurs.json</code>.</div>`;
-  if (joueurs.length) {
-    const tri = joueurs.slice().sort((a, b) => (b.buts || 0) - (a.buts || 0));
-    const top = tri[0]?.buts || 0;
-    squadHtml = `<div class="player-grid">` + joueurs.map((p) => `
-      <div class="player${p.buts === top && p.buts > 0 ? ' top' : ''}">
-        <div class="num">${esc(p.numero ?? '—')}</div>
-        <div class="pname">${esc(p.nom)}<div class="ppost">${esc(p.poste || 'Joueur')} · ${p.matchsJoues || 0} match${(p.matchsJoues || 0) > 1 ? 's' : ''}</div></div>
-        <div class="pstats"><b>${p.buts || 0}</b><span>buts</span></div>
-        <div class="pstats"><b>${p.passes || 0}</b><span>passes</span></div>
-      </div>`).join('') + `</div>`;
-    if (top > 0) {
-      squadHtml += `<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">` +
-        tri.filter((p) => p.buts > 0).slice(0, 3).map((p) =>
-          `<span class="top-scorer">🥇 ${esc(p.nom)} · ${p.buts} ⚽</span>`).join('') + `</div>`;
-    }
+  const nb = joueurs.length;
+  let body = `<div class="squad-note">👥 Effectif extrait des feuilles de match officielles FFF (composition) + saisie staff. Les buts/passes sont gérés via <code>data/staff-input.json</code> (ou <code>data/${cat.id}-joueurs.json</code>).</div>`;
+
+  if (nb) {
+    body += `
+      <div class="squad-tools">
+        <span class="squad-count">${nb} joueurs</span>
+        <div class="squad-sorts">
+          <button class="btn btn-ghost btn-xs" data-sort="buts">⚽ Trier par buts</button>
+          <button class="btn btn-ghost btn-xs" data-sort="matchs">📆 Trier par matchs</button>
+          <button class="btn btn-ghost btn-xs" data-sort="nom">🔤 Alphabétique</button>
+        </div>
+      </div>
+      <div class="player-grid" id="squadGrid">${joueurs.map((p, i) => playerCard(p, i)).join('')}</div>
+      <div class="top-scorers" id="topScorers"></div>`;
   }
 
   return `
     <div class="glass-in">
-      <div class="card-head"><h3>👥 Effectif ${cat.libelle}</h3><div class="meta">${joueurs.length} joueurs détectés</div></div>
-      <div style="padding:18px 20px">${squadHtml}</div>
+      <div class="card-head"><h3>👥 Effectif ${cat.libelle}</h3><div class="meta">${nb} joueurs détectés</div></div>
+      <div style="padding:16px 18px 18px">${body}</div>
     </div>`;
+}
+
+/* Tri interactif de l'effectif (délégué, appelé après injection) */
+function bindSquadSorts(joueurs, container) {
+  const grid = container.querySelector('#squadGrid');
+  if (!grid) return;
+  const sorts = container.querySelectorAll('[data-sort]');
+  sorts.forEach((btn) => btn.addEventListener('click', () => {
+    const mode = btn.dataset.sort;
+    let sorted;
+    if (mode === 'buts') sorted = joueurs.slice().sort((a, b) => (b.buts || 0) - (a.buts || 0) || (b.passes || 0) - (a.passes || 0));
+    else if (mode === 'matchs') sorted = joueurs.slice().sort((a, b) => (b.matchsJoues || 0) - (a.matchsJoues || 0));
+    else sorted = joueurs.slice().sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
+    grid.innerHTML = sorted.map((p, i) => playerCard(p, i)).join('');
+    // podium mis à jour
+    const ts = container.querySelector('#topScorers');
+    if (ts) {
+      const top = sorted.filter((p) => p.buts > 0).slice(0, 3);
+      ts.innerHTML = top.length
+        ? top.map((p, i) => `<span class="top-scorer">${['🥇','🥈','🥉'][i]} ${esc(p.nom)} · ${p.buts} ⚽</span>`).join('')
+        : '';
+    }
+  }));
 }
 
 /* ---------------- Bientôt ---------------- */

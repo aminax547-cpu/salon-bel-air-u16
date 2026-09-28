@@ -11,10 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # Classement + calendrier (matchs futurs avec stade/GPS/heure) + effectif
+      # La FFF est scrapée via SSR ; si le WAF bloque un passage, le script garde
+      # la mémoire du run précédent (calendrier futurs) et le staff-input.json
+      # garantit les stats individuelles (buts/passes) saisies par le coach.
       - name: Sync U16
         run: node tools/fetch-fff.mjs --cat u16
       - name: Sync U19
         run: node tools/fetch-fff.mjs --cat u19
+
       - name: Commit si modification
         run: |
           if ! git diff --quiet; then

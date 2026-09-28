@@ -386,3 +386,49 @@ td.diff.neg { color: var(--ko); }
   .cd-num { min-width: 46px; padding: 8px 4px; font-size: 1.1rem; }
   .vs-crest { width: 48px; height: 48px; }
 }
+
+/* ---------------- Cartes Panini / Ultimate Team ---------------- */
+.squad-tools { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.squad-count { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+.squad-sorts { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-xs { padding: 6px 11px; font-size: 0.74rem; border-radius: 999px; }
+.player-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+.p-card {
+  background: linear-gradient(170deg, rgba(20,36,72,0.9), rgba(8,14,30,0.95));
+  border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+  transition: transform .18s, border-color .18s, box-shadow .18s;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+}
+.p-card:hover { transform: translateY(-3px); border-color: var(--border-gold); box-shadow: 0 14px 30px rgba(200,169,106,0.18); }
+.p-card.top { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold), 0 12px 30px rgba(200,169,106,0.25); }
+.p-card-head { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px 6px; }
+.p-card-num { font-family: "JetBrains Mono", monospace; font-weight: 800; color: var(--gold); font-size: 0.95rem; }
+.p-card-badge { font-size: 1rem; }
+.p-card-body { text-align: center; padding: 4px 10px 10px; }
+.p-card-avatar {
+  width: 56px; height: 56px; margin: 0 auto 8px; border-radius: 50%;
+  display: grid; place-items: center; font-family: Outfit, sans-serif; font-weight: 800; font-size: 1.4rem;
+  background: linear-gradient(135deg, rgba(200,169,106,0.35), rgba(200,169,106,0.08));
+  border: 1px solid var(--border-gold); color: var(--gold2);
+}
+.p-card-name { font-weight: 800; color: #fff; font-size: 0.88rem; line-height: 1.25; min-height: 2.2em; display: flex; align-items: center; justify-content: center; }
+.p-card-post { color: var(--muted); font-size: 0.68rem; margin-top: 3px; letter-spacing: .04em; text-transform: uppercase; }
+.p-card-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.pc-stat { text-align: center; padding: 9px 4px; }
+.pc-stat + .pc-stat { border-left: 1px solid var(--border); }
+.pc-stat b { display: block; font-family: "JetBrains Mono", monospace; font-size: 1.05rem; color: var(--gold2); }
+.pc-stat span { display: block; font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; }
+.p-card-foot { display: flex; justify-content: space-around; padding: 8px 10px; font-size: 0.72rem; color: var(--muted); }
+.p-card-foot .pj-jaune { color: #ffd76b; }
+.p-card-foot .pj-rouge { color: #ff7d7d; }
+.top-scorers { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+
+/* lignes calendrier futur avec actions */
+.cal-row.future { grid-template-columns: 56px 1fr auto auto; }
+.cal-actions { display: inline-flex; gap: 5px; }
+.cal-lieu { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 500; margin-top: 2px; }
+@media (max-width: 720px) {
+  .cal-row.future { grid-template-columns: 46px 1fr; }
+  .cal-actions { grid-column: 2; justify-self: start; }
+  .squad-tools { flex-direction: column; align-items: flex-start; }
+}
