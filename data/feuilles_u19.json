@@ -12,7 +12,9 @@
     "gps": "43.6487951,5.1001995",
     "heure": "16:00",
     "composition": [],
-    "evenements": []
+    "evenements": [],
+    "lieu": "STADE DIMITRI PAYET",
+    "statut": "a_venir"
   },
   {
     "id": "match_79379990",
@@ -242,7 +244,9 @@
         "clubAdverse": null,
         "typeSanction": "J"
       }
-    ]
+    ],
+    "lieu": "STADE SAINT LOUP 1",
+    "statut": "joue"
   },
   {
     "id": "match_79379999",
@@ -257,7 +261,9 @@
     "gps": "43.6487951,5.1001995",
     "heure": "16:00",
     "composition": [],
-    "evenements": []
+    "evenements": [],
+    "lieu": "STADE DIMITRI PAYET",
+    "statut": "a_venir"
   },
   {
     "id": "match_79380006",
@@ -272,7 +278,9 @@
     "gps": "43.44781565,5.35415522",
     "heure": "16:00",
     "composition": [],
-    "evenements": []
+    "evenements": [],
+    "lieu": "StadE Maurice Sambuc",
+    "statut": "a_venir"
   },
   {
     "id": "match_79380021",
@@ -287,6 +295,8 @@
     "gps": "43.6487951,5.1001995",
     "heure": "17:00",
     "composition": [],
-    "evenements": []
+    "evenements": [],
+    "lieu": "STADE DIMITRI PAYET",
+    "statut": "a_venir"
   }
 ]

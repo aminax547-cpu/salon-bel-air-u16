@@ -7,7 +7,7 @@
     "score": "3 — 5",
     "joue": true,
     "domicile": true,
-    "adversaire": "LUYNES S. 2",
+    "adversaire": "LUYNES S.",
     "stade": "STADE DIMITRI PAYET",
     "gps": "43.6487951,5.1001995",
     "heure": "09:00",
@@ -226,7 +226,9 @@
         "clubAdverse": "ADAM M.",
         "typeSanction": "J"
       }
-    ]
+    ],
+    "lieu": "STADE DIMITRI PAYET",
+    "statut": "joue"
   },
   {
     "id": "match_79514111",
@@ -354,7 +356,9 @@
         "momentsForts": []
       }
     ],
-    "evenements": []
+    "evenements": [],
+    "lieu": "PARC DES SPORTS N° 3",
+    "statut": "joue"
   },
   {
     "id": "match_79514115",
@@ -364,7 +368,7 @@
     "score": "3 — 0",
     "joue": true,
     "domicile": true,
-    "adversaire": "MGCB FC 2",
+    "adversaire": "MGCB FC",
     "stade": "STADE DIMITRI PAYET",
     "gps": "43.6487951,5.1001995",
     "heure": "09:00",
@@ -574,7 +578,9 @@
         "clubAdverse": null,
         "typeSanction": "J"
       }
-    ]
+    ],
+    "lieu": "STADE DIMITRI PAYET",
+    "statut": "joue"
   },
   {
     "id": "match_79514123",
@@ -584,12 +590,14 @@
     "score": null,
     "joue": false,
     "domicile": false,
-    "adversaire": "CARNOUX F.C. 2",
+    "adversaire": "CARNOUX F.C.",
     "stade": "STADE MARCEL CERDAN 2",
     "gps": "43.2499343,5.551736631",
     "heure": "07:00",
     "composition": [],
-    "evenements": []
+    "evenements": [],
+    "lieu": "STADE MARCEL CERDAN 2",
+    "statut": "a_venir"
   },
   {
     "id": "match_79514135",
@@ -604,7 +612,9 @@
     "gps": "43.40465,5.36182",
     "heure": "08:00",
     "composition": [],
-    "evenements": []
+    "evenements": [],
+    "lieu": "STADE LE GRAND PAVOIS",
+    "statut": "a_venir"
   },
   {
     "id": "match_79514141",
@@ -619,6 +629,8 @@
     "gps": "43.6487951,5.1001995",
     "heure": "08:00",
     "composition": [],
-    "evenements": []
+    "evenements": [],
+    "lieu": "STADE DIMITRI PAYET",
+    "statut": "a_venir"
   }
 ]

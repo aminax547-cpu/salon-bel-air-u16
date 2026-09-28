@@ -12,13 +12,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 1) Classement + calendrier + effectif (SSR FFF, fusion mémoire anti-WAF)
+      # 0) CALENDRIER COMPLET (22 journées) via l'API Du District (provence.fff.fr)
+      - name: Calendrier U16 (API District)
+        run: node tools/fetch-calendrier.mjs --cat u16
+      - name: Calendrier U19 (API District)
+        run: node tools/fetch-calendrier.mjs --cat u19
+
+      # 1) Classement + stats équipe (SSR FFF, fusion mémoire anti-WAF)
       - name: Sync U16 (classement)
         run: node tools/fetch-fff.mjs --cat u16
       - name: Sync U19 (classement)
         run: node tools/fetch-fff.mjs --cat u19
 
-      # 2) FEUILLE PAR FEUILLE : compositions + événements + agrégation réelle
+      # 2) FEUILLE PAR FEUILLE : compositions + événements → stats joueurs réelles
       - name: Feuilles U16 (compo + événements → stats)
         run: node tools/fetch-feilles.mjs --cat u16
       - name: Feuilles U19 (compo + événements → stats)
@@ -31,7 +37,7 @@ jobs:
             git config user.name "bot-classement"
             git config user.email "bot@users.noreply.github.com"
             git add -A
-            git commit -m "auto: sync FFF (classements + feuilles de match + stats) — $(date -u +%Y-%m-%d-%H)"
+            git commit -m "auto: sync FFF (calendrier complet + classements + feuilles + stats) — $(date -u +%Y-%m-%d-%H)"
             git push
           else
             echo "Aucun changement."
