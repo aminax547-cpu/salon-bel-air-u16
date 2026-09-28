@@ -1,0 +1,144 @@
+{
+  "categorie": "U19",
+  "saison": "2026/27",
+  "calcul": "feuilles de match officielles FFF (composition + événements), cumul par match joué",
+  "maj": "2026-09-28T13:56:37.707Z",
+  "effectif": [
+    {
+      "nom": "ALEXANDRE C.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "ALEXIS S.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 1,
+      "rouges": 0
+    },
+    {
+      "nom": "ARNAUD L.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "ENZO V.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "FLORIAN R.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "GABRIEL T.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "GAETAN L.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "ILIAN S.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "KILIAN B.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "MATTHIEU T.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "NOLAN D.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "QUENTIN R.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "YFTAHIE M.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "LISANDRO F.",
+      "matchs_joues": 0,
+      "buts": 2,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "LUCAS B.",
+      "matchs_joues": 0,
+      "buts": 3,
+      "passes": 1,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "YOUSSEF F.",
+      "matchs_joues": 0,
+      "buts": 4,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "HAMZA B.",
+      "matchs_joues": 0,
+      "buts": 1,
+      "passes": 3,
+      "jaunes": 0,
+      "rouges": 0
+    }
+  ]
+}

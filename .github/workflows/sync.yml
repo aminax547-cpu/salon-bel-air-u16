@@ -1,7 +1,7 @@
 name: Sync classements FFF
 on:
   schedule:
-    # Toutes les 6 heures (08h, 14h, 20h, 02h UTC) — après les journées
+    # Toutes les 6 heures (08h, 14h, 20h, 02h UTC)
     - cron: '0 8,14,20,2 * * *'
   workflow_dispatch:
 permissions:
@@ -12,22 +12,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Classement + calendrier (matchs futurs avec stade/GPS/heure) + effectif
-      # La FFF est scrapée via SSR ; si le WAF bloque un passage, le script garde
-      # la mémoire du run précédent (calendrier futurs) et le staff-input.json
-      # garantit les stats individuelles (buts/passes) saisies par le coach.
-      - name: Sync U16
+      # 1) Classement + calendrier + effectif (SSR FFF, fusion mémoire anti-WAF)
+      - name: Sync U16 (classement)
         run: node tools/fetch-fff.mjs --cat u16
-      - name: Sync U19
+      - name: Sync U19 (classement)
         run: node tools/fetch-fff.mjs --cat u19
 
+      # 2) FEUILLE PAR FEUILLE : compositions + événements + agrégation réelle
+      - name: Feuilles U16 (compo + événements → stats)
+        run: node tools/fetch-feilles.mjs --cat u16
+      - name: Feuilles U19 (compo + événements → stats)
+        run: node tools/fetch-feilles.mjs --cat u19
+
+      # 3) buts/passes saisis par le coach (data/staff-input.json) → fusionnés
       - name: Commit si modification
         run: |
           if ! git diff --quiet; then
             git config user.name "bot-classement"
             git config user.email "bot@users.noreply.github.com"
             git add -A
-            git commit -m "auto: sync classements U16+U19 (FFF) — $(date -u +%Y-%m-%d-%H)"
+            git commit -m "auto: sync FFF (classements + feuilles de match + stats) — $(date -u +%Y-%m-%d-%H)"
             git push
           else
             echo "Aucun changement."

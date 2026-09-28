@@ -1,0 +1,176 @@
+{
+  "categorie": "U16",
+  "saison": "2026/27",
+  "calcul": "feuilles de match officielles FFF (composition + événements), cumul par match joué",
+  "maj": "2026-09-28T13:38:32.174Z",
+  "effectif": [
+    {
+      "nom": "DIEGO C.",
+      "matchs_joues": 3,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 1,
+      "rouges": 0
+    },
+    {
+      "nom": "ILAN H.",
+      "matchs_joues": 3,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "LISANDRO F.",
+      "matchs_joues": 3,
+      "buts": 2,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "LUCAS B.",
+      "matchs_joues": 3,
+      "buts": 3,
+      "passes": 1,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "ANDREAS F.",
+      "matchs_joues": 2,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "AXEL A.",
+      "matchs_joues": 2,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "CHADI E.",
+      "matchs_joues": 2,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "EROS R.",
+      "matchs_joues": 2,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "HAMZA B.",
+      "matchs_joues": 2,
+      "buts": 1,
+      "passes": 3,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "ILYAN M.",
+      "matchs_joues": 2,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "LUCAS B.",
+      "matchs_joues": 2,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "NOLAN D.",
+      "matchs_joues": 2,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "SANDRO J.",
+      "matchs_joues": 2,
+      "buts": 0,
+      "passes": 2,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "SKANDER M.",
+      "matchs_joues": 2,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "ADAM E.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "AMINE A.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "COLE H.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "MATHIS S.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "NOE R.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "ROMANO D.",
+      "matchs_joues": 1,
+      "buts": 0,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    },
+    {
+      "nom": "YOUSSEF F.",
+      "matchs_joues": 1,
+      "buts": 4,
+      "passes": 0,
+      "jaunes": 0,
+      "rouges": 0
+    }
+  ]
+}

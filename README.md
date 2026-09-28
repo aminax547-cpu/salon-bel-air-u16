@@ -61,3 +61,25 @@ https://aminax547-cpu.github.io/salon-bel-air-u16/
 
 ---
 Fait avec 🤍 pour Salon Bel Air Foot. Site non officiel — données FFF (epreuves.fff.fr).
+
+## 📋 Mise à jour majeure : statistiques feuille par feuille (28/09/2026)
+
+Le scraping est passé d'une approche "classement global" à une approche
+**feuille de match par feuille de match** (`tools/fetch-feilles.mjs`) qui
+construit un historique réel et indiscutable :
+
+1. **Étape 1** : scan des URLs `/competition/match/<id>` (IDs séquentiels FFF)
+   → liste des matchs passés et futurs de Salon Bel Air.
+2. **Étape 2** : pour chaque match, parse de la feuille officielle :
+   - score exact + stade + GPS + heure,
+   - **composition complète** (XI titulaires + remplaçants, numéros),
+   - **événements avec timing** (ex. `12' 🔄 HAMZA B. entre ← sort LISANDRO F.`, `66' 🟨 DIEGO C. averti`).
+3. **Agrégation scientifique** (`data/stats_<cat>.json`) :
+   - `matchs_joues` = +1 si titulaire OU entré en jeu (événement remplacement) ;
+   - `jaunes` / `rouges` comptés sur les événements nominatifs ;
+   - `buts` / `passes` : la FFF ne les publie pas pour les jeunes → saisis
+     par le coach dans `data/staff-input.json` (fusion par nom + numéro).
+
+**Frontend** : l'onglet Calendrier affiche désormais "Voir la compo" (déroulant)
+sur chaque match joué (titulaires / remplaçants / événements) ; les cartes
+d'effectif lisent `stats_<cat>.json` (fini les données codées en dur).

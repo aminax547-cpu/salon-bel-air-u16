@@ -432,3 +432,18 @@ td.diff.neg { color: var(--ko); }
   .cal-actions { grid-column: 2; justify-self: start; }
   .squad-tools { flex-direction: column; align-items: flex-start; }
 }
+
+/* ---------------- Composition déroulante (feuille de match) ---------------- */
+.cal-row.joue { cursor: pointer; }
+.cal-row.joue::after { content: "▾"; color: var(--muted); font-size: 0.7rem; }
+.cal-row.joue.open::after { content: "▴"; }
+.compo-box { padding: 4px 18px 16px; }
+.compo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
+.compo-side h5 { font-size: 0.7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.compo-p { display: flex; align-items: center; gap: 9px; padding: 4px 0; font-size: 0.82rem; color: #e2e9f7; font-weight: 600; }
+.c-num { width: 24px; height: 24px; flex: none; display: grid; place-items: center; border-radius: 7px; font-family: "JetBrains Mono", monospace; font-size: 0.68rem; font-weight: 800; background: rgba(200,169,106,0.14); color: var(--gold2); border: 1px solid var(--border-gold); }
+.compo-ev { list-style: none; padding: 0; }
+.compo-ev li { padding: 4px 0; font-size: 0.8rem; color: #cdd7ea; }
+.compo-ev li b { color: #fff; }
+.compo-ev li span { font-family: "JetBrains Mono", monospace; color: var(--gold2); }
+@media (max-width: 720px) { .compo-grid { grid-template-columns: 1fr; } }

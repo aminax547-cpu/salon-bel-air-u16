@@ -178,7 +178,10 @@ async function renderCat(app, cat) {
     setTimeout(() => tabBox.classList.remove('fade-in'), 350);
     if (name === 'classement') tabBox.innerHTML = buildClassement(d);
     else if (name === 'stats') tabBox.innerHTML = buildStats(d, cat);
-    else if (name === 'calendrier') { tabBox.innerHTML = buildCalendrier(d); bindCountdown(); }
+    else if (name === 'calendrier') {
+      tabBox.innerHTML = skeletonPage();
+      buildCalendrier(d, cat).then((html) => { tabBox.innerHTML = html; bindCountdown(); });
+    }
     else if (name === 'equipe') {
       // on passe l'effectif (JSON principal + joueurs dédiés) au tri
       const joueurs = (d.effectif || []).slice();
@@ -331,10 +334,18 @@ function barStats(side, label) {
 }
 
 /* ---------------- Calendrier interactif ---------------- */
-function buildCalendrier(d) {
+async function buildCalendrier(d, cat) {
   const next = d.prochainMatch;
   const rows = (d.calendrier || []).slice();
   let html = '';
+
+  // feuilles de match (composition + événements) pour les compo déroulantes
+  let feuilles = [];
+  try {
+    const fd = await getJSON('./data/feuilles_' + cat.id + '.json');
+    if (Array.isArray(fd)) feuilles = fd;
+  } catch (_) { /* pas de feuilles */ }
+  const feuilleParJ = new Map(feuilles.map((f) => [f.journee, f]));
 
   if (next) {
     const mapsQuery = next.gps || next.lieu || 'Salon-de-Provence';
@@ -391,16 +402,19 @@ function buildCalendrier(d) {
 
   if (joues.length) {
     html += `<div class="glass-in" style="margin-top:16px">
-      <div class="card-head"><h3>🏁 Matchs joués</h3><div class="meta">${joues.length} matchs</div></div>
+      <div class="card-head"><h3>🏁 Matchs joués</h3><div class="meta">${joues.length} matchs · cliquer pour voir la compo</div></div>
       <div class="cal-list">`;
     for (const j of joues) {
-      const adv = j.domicile ? j.exterieur : j.adversaire;
-      html += `<div class="cal-row">
+      const feuille = feuilleParJ.get(j.journee);
+      const compoBlock = feuille ? compoHTML(feuille) : '';
+      html += `<div class="cal-row joue" data-compo="${esc(j.journee)}">
         <div><div class="cal-j">${esc(j.journee)}</div><div class="cal-date">${dateCourte(j.date)}</div></div>
-        <div class="cal-match"><span>${j.domicile ? '<b>Salon Bel Air</b>' : esc(j.exterieur || '?')}</span> <span class="vs">vs</span> <span>${j.domicile ? esc(j.exterieur || '?') : '<b>Salon Bel Air</b>'}</span></div>
+        <div class="cal-match"><span>${j.domicile ? '<b>Salon Bel Air</b>' : esc(j.exterieur || '?')}</span> <span class="vs">vs</span> <span>${j.domicile ? esc(j.exterieur || '?') : '<b>Salon Bel Air</b>'}</span>
+          ${j.lieu ? `<small class="cal-lieu">📍 ${esc(j.lieu)}</small>` : ''}</div>
         ${j.score ? `<span class="cal-score">${esc(j.score)}</span>` : '<span class="cal-tag done">—</span>'}
         <span class="cal-tag done">Joué</span>
-      </div>`;
+      </div>
+      ${compoBlock ? `<div class="compo-box" id="compo-${esc(j.journee)}" hidden>${compoBlock}</div>` : ''}`;
     }
     html += '</div></div>';
   }
@@ -419,6 +433,41 @@ function buildCalendrier(d) {
   }
 
   return html;
+}
+
+/* ---------------- Composition de match (feuille FFF) ---------------- */
+function compoHTML(f) {
+  const titulaires = (f.composition || []).filter((p) => p.type === 'titulaire');
+  const remplacants = (f.composition || []).filter((p) => p.type !== 'titulaire');
+  const ev = (f.evenements || []).filter((e) => e.sba);
+  const evHTML = ev.map((e) => {
+    if (e.type === 'remplacement') {
+      return `<li>${e.minute}<span>’</span> 🔄 <b>${esc(e.entrant)}</b> entre ← sort ${esc(e.sortant)}</li>`;
+    }
+    if (e.type === 'carton-jaune') {
+      return `<li>${e.minute}<span>’</span> 🟨 <b>${esc(e.joueur)}</b> averti</li>`;
+    }
+    if (e.type === 'carton-rouge') {
+      return `<li>${e.minute}<span>’</span> 🟥 <b>${esc(e.joueur)}</b> expulsé</li>`;
+    }
+    if (e.type === 'but') {
+      return `<li>${e.minute}<span>’</span> ⚽ BUT <b>${esc(e.joueur)}</b></li>`;
+    }
+    return '';
+  }).join('');
+
+  return `
+    <div class="compo-grid">
+      <div class="compo-side">
+        <h5>XI Titulaires</h5>
+        ${titulaires.map((p) => `<div class="compo-p"><span class="c-num">${esc(p.numero ?? '—')}</span> ${esc(p.prenom)} ${esc(p.nom)}</div>`).join('')}
+        ${remplacants.length ? `
+        <h5 style="margin-top:10px">Remplaçants</h5>
+        ${remplacants.map((p) => `<div class="compo-p"><span class="c-num">${esc(p.numero ?? '—')}</span> ${esc(p.prenom)} ${esc(p.nom)}</div>`).join('')}` : ''}
+      </div>
+      ${evHTML ? `<div class="compo-side"><h5>⏱️ Événements ${esc(f.journee || '')}</h5><ul class="compo-ev">${evHTML}</ul></div>` : ''}
+      ${!evHTML && !titulaires.length ? '<div class="status">Feuille indisponible.</div>' : ''}
+    </div>`;
 }
 
 function makeICS(m) {
@@ -470,17 +519,38 @@ function playerCard(p, rank) {
 }
 
 async function buildEquipe(d, cat) {
-  let joueurs = [];
+  // Source de vérité : stats_<cat>.json (calcul scientifique cumulé feuille par feuille)
+  let joueurs = null;
   try {
-    const jf = cat.id + '-joueurs.json';
-    const jd = await getJSON('./data/' + jf);
-    joueurs = jd.joueurs || [];
-  } catch (_) { /* pas de fichier joueurs */ }
-  // si l'effectif n'est pas dans le fichier dédié, on utilise celui du JSON principal
-  if (!joueurs.length && d.effectif?.length) joueurs = d.effectif;
+    const sd = await getJSON('./data/stats_' + cat.id + '.json');
+    if (Array.isArray(sd.effectif)) {
+      joueurs = sd.effectif.map((j) => ({
+        numero: j.numero ?? null,
+        nom: j.nom,
+        matchsJoues: j.matchs_joues ?? 0,
+        buts: j.buts ?? 0,
+        passes: j.passes ?? 0,
+        cartonsJaunes: j.jaunes ?? 0,
+        cartonsRouges: j.rouges ?? 0,
+        titularisations: 0,
+        remplacements: 0,
+        poste: '',
+      }));
+    }
+  } catch (_) { /* stats_<cat>.json absent : on garde le fallback */ }
 
-  const nb = joueurs.length;
-  let body = `<div class="squad-note">👥 Effectif extrait des feuilles de match officielles FFF (composition) + saisie staff. Les buts/passes sont gérés via <code>data/staff-input.json</code> (ou <code>data/${cat.id}-joueurs.json</code>).</div>`;
+  if (!joueurs) {
+    try {
+      const jf = cat.id + '-joueurs.json';
+      const jd = await getJSON('./data/' + jf);
+      joueurs = jd.joueurs || [];
+    } catch (_) { /* pas de fichier joueurs */ }
+  }
+  // fallback final : l'effectif du JSON principal
+  if (!joueurs?.length && d.effectif?.length) joueurs = d.effectif;
+
+  const nb = joueurs?.length || 0;
+  let body = `<div class="squad-note">📋 Effectif calculé feuille par feuille depuis les <b>compositions officielles FFF</b> (titulaires + entrants en jeu) et les événements (cartons). Les buts/passes, non publiés par la FFF pour les jeunes, sont saisis par le staff via <code>data/staff-input.json</code>.</div>`;
 
   if (nb) {
     body += `
@@ -498,7 +568,7 @@ async function buildEquipe(d, cat) {
 
   return `
     <div class="glass-in">
-      <div class="card-head"><h3>👥 Effectif ${cat.libelle}</h3><div class="meta">${nb} joueurs détectés</div></div>
+      <div class="card-head"><h3>👥 Effectif ${cat.libelle}</h3><div class="meta">${nb} joueurs (cumul feuilles FFF)</div></div>
       <div style="padding:16px 18px 18px">${body}</div>
     </div>`;
 }
@@ -599,6 +669,15 @@ window.addEventListener('hashchange', router);
 document.addEventListener('click', (e) => {
   const dd = document.querySelector('.dropdown');
   if (dd && !e.target.closest('.dropdown')) dd.classList.remove('open');
+
+  // toggle "Voir la compo" sur les matchs joués
+  const row = e.target.closest?.('.cal-row.joue[data-compo]');
+  if (row) {
+    const j = row.dataset.compo;
+    const box = document.getElementById('compo-' + j);
+    if (box) box.hidden = !box.hidden;
+    row.classList.toggle('open');
+  }
 });
 el('catBtn')?.addEventListener('click', (e) => {
   e.stopPropagation();
