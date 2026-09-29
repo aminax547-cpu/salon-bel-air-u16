@@ -47,20 +47,5 @@
       "actif": false
     }
   ],
-  "actualites": [
-    {
-      "date": "2026-09-27",
-      "categorie": "U16",
-      "titre": "Salon Bel Air U16 s'impose 3-0 contre MGCB FC 2",
-      "texte": "Deuxième victoire de rang pour les U16, qui restent invaincus à domicile avec déjà 2 clean sheets en 3 journées.",
-      "emoji": "⚽"
-    },
-    {
-      "date": "2026-09-26",
-      "categorie": "U19",
-      "titre": "U19 : défaite 4-2 à Saint Loup malgré une belle réaction",
-      "texte": "Menés rapidement, les U19 ont réagi en fin de match. Rendez-vous la semaine prochaine pour lancer la saison.",
-      "emoji": "💪"
-    }
-  ]
+  "actualites": []
 }

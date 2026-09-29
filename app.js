@@ -80,21 +80,10 @@ function skeletonPage() {
  * ===================================================================== */
 async function renderDashboard(app) {
   const club = clubConfig || (clubConfig = await getJSON(CLUB_FILE));
-  // fusionner les actus générées par l'IA (data/actus/*.json) avec celles du club
-  let actusIA = [];
-  try {
-    const list = await getJSON('./data/actus/index.json');
-    actusIA = list.actualites || [];
-  } catch (_) {
-    // pas d'index : on essaie les fichiers connus en dur (générés par l'Action)
-    for (const f of ['u16-j4.json', 'u16-j3.json', 'u19-j3.json']) {
-      try {
-        const a = await getJSON('./data/actus/' + f);
-        actusIA.push(a);
-      } catch (_) { /* ignore */ }
-    }
-  }
-  const toutes = [...(club.actualites || []), ...actusIA]
+  // Fil d'actualité : uniquement des actus VÉRIFIÉES (aucune acta générique).
+  // Le club peut publier de vraies actus dans data/club.json → actualites,
+  // ou via le générateur IA (data/actus/) après validation du coach.
+  const toutes = [...(club.actualites || [])]
     .slice()
     .sort((a, b) => (a.date < b.date ? 1 : -1));
 
@@ -130,8 +119,8 @@ async function renderDashboard(app) {
     <section class="cat-grid">${catsCard}</section>
 
     <section class="glass" style="margin-top:26px">
-      <div class="card-head"><h3>🗞️ Fil d'actualité du club</h3><div class="meta">généré après chaque journée</div></div>
-      <div class="actus">${actus || '<div class="status">Aucune actualité pour le moment.</div>'}</div>
+      <div class="card-head"><h3>🗞️ Fil d'actualité du club</h3><div class="meta">résultats & infos vérifiées</div></div>
+      <div class="actus">${actus || '<div class="status">Aucune actualité pour l&rsquo;instant — les résultats officiels s&rsquo;afficheront ici après chaque journée.</div>'}</div>
     </section>`;
 }
 
