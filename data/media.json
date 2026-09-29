@@ -1,0 +1,21 @@
+{
+  "note": "Photos/vidéos fournies par le club — généré par tools/index-media.mjs (ne pas éditer à la main)",
+  "medias": [
+    {
+      "cat": "u16",
+      "journee": "J3",
+      "adversaire": "mgcb",
+      "type": "photo",
+      "src": "./media/u16/J3-mgcb/photo-victoire.svg",
+      "caption": null
+    },
+    {
+      "cat": "u16",
+      "journee": "J3",
+      "adversaire": "mgcb",
+      "type": "lien",
+      "src": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "caption": null
+    }
+  ]
+}

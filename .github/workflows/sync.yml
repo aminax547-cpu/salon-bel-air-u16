@@ -30,14 +30,18 @@ jobs:
       - name: Feuilles U19 (compo + événements → stats)
         run: node tools/fetch-feilles.mjs --cat u19
 
-      # 3) buts/passes saisis par le coach (data/staff-input.json) → fusionnés
+      # 3) PHOTOS / VIDÉOS déposées par le club dans media/ → data/media.json
+      - name: Indexer les médias
+        run: node tools/index-media.mjs
+
+      # 4) buts/passes saisis par le coach (data/staff-input.json) → fusionnés
       - name: Commit si modification
         run: |
           if ! git diff --quiet; then
             git config user.name "bot-classement"
             git config user.email "bot@users.noreply.github.com"
             git add -A
-            git commit -m "auto: sync FFF (calendrier complet + classements + feuilles + stats) — $(date -u +%Y-%m-%d-%H)"
+            git commit -m "auto: sync FFF (calendrier + classements + feuilles + stats + médias) — $(date -u +%Y-%m-%d-%H)"
             git push
           else
             echo "Aucun changement."

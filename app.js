@@ -336,6 +336,28 @@ async function buildCalendrier(d, cat) {
   } catch (_) { /* pas de feuilles */ }
   const feuilleParJ = new Map(feuilles.map((f) => [f.journee, f]));
 
+  // médias du club (photos/vidéos/liens affichés au clic sur le match)
+  let medias = [];
+  try {
+    const md = await getJSON('./data/media.json');
+    if (Array.isArray(md.medias)) medias = md.medias.filter((m) => m.cat === cat.id);
+  } catch (_) { /* pas de médias */ }
+  const mediasParJ = new Map();
+  for (const m of medias) {
+    const key = m.journee;
+    if (!mediasParJ.has(key)) mediasParJ.set(key, []);
+    mediasParJ.get(key).push(m);
+  }
+  function galerieHTML(journee) {
+    const list = mediasParJ.get(journee) || [];
+    if (!list.length) return '';
+    return `
+      <div class="media-box">
+        <h5>📸 Photos & vidéos</h5>
+        <div class="media-grid">${list.map((m, i) => mediaThumb(m, i)).join('')}</div>
+      </div>`;
+  }
+
   if (next) {
     const mapsQuery = next.gps || next.lieu || 'Salon-de-Provence';
     const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(mapsQuery)}`;
@@ -391,19 +413,21 @@ async function buildCalendrier(d, cat) {
 
   if (joues.length) {
     html += `<div class="glass-in" style="margin-top:16px">
-      <div class="card-head"><h3>🏁 Matchs joués</h3><div class="meta">${joues.length} matchs · cliquer pour voir la compo</div></div>
+      <div class="card-head"><h3>🏁 Matchs joués</h3><div class="meta">${joues.length} matchs · cliquer pour voir la compo & les médias</div></div>
       <div class="cal-list">`;
     for (const j of joues) {
       const feuille = feuilleParJ.get(j.journee);
       const compoBlock = feuille ? compoHTML(feuille) : '';
-      html += `<div class="cal-row joue" data-compo="${esc(j.journee)}">
+      const galerie = galerieHTML(j.journee);
+      const nbMedias = (mediasParJ.get(j.journee) || []).length;
+      html += `<div class="cal-row joue" data-compo="${esc(j.journee)}" data-journee="${esc(j.journee)}">
         <div><div class="cal-j">${esc(j.journee)}</div><div class="cal-date">${dateCourte(j.date)}</div></div>
         <div class="cal-match"><span>${j.domicile ? '<b>Salon Bel Air</b>' : esc(j.exterieur || '?')}</span> <span class="vs">vs</span> <span>${j.domicile ? esc(j.exterieur || '?') : '<b>Salon Bel Air</b>'}</span>
           ${j.lieu ? `<small class="cal-lieu">📍 ${esc(j.lieu)}</small>` : ''}</div>
         ${j.score ? `<span class="cal-score">${esc(j.score)}</span>` : '<span class="cal-tag done">—</span>'}
-        <span class="cal-tag done">Joué</span>
+        <span class="cal-tag done">Joué${nbMedias ? ' · 📸' : ''}</span>
       </div>
-      ${compoBlock ? `<div class="compo-box" id="compo-${esc(j.journee)}" hidden>${compoBlock}</div>` : ''}`;
+      ${(compoBlock || galerie) ? `<div class="compo-box" id="compo-${esc(j.journee)}" hidden data-journee="${esc(j.journee)}">${compoBlock}${galerie}</div>` : ''}`;
     }
     html += '</div></div>';
   }
@@ -420,6 +444,10 @@ async function buildCalendrier(d, cat) {
     }
     html += '</div></div>';
   }
+
+  // mémorise les médias du match pour les clics (lightbox)
+  window.__mediasParJ = mediasParJ;
+  setTimeout(() => bindMediaClicks(document.getElementById('tabContent')), 0);
 
   return html;
 }
@@ -457,6 +485,101 @@ function compoHTML(f) {
       ${evHTML ? `<div class="compo-side"><h5>⏱️ Événements ${esc(f.journee || '')}</h5><ul class="compo-ev">${evHTML}</ul></div>` : ''}
       ${!evHTML && !titulaires.length ? '<div class="status">Feuille indisponible.</div>' : ''}
     </div>`;
+}
+
+/* ---------------- Médias (photos/vidéos) du match ---------------- */
+function youtubeID(url) {
+  const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{6,})/);
+  return m ? m[1] : null;
+}
+function mediaThumb(m, i) {
+  if (m.type === 'photo') {
+    return `<div class="media-item photo" data-media="${i}" tabindex="0" role="button" aria-label="Agrandir la photo ${esc(m.caption || '')}">
+      <img src="${esc(m.src)}" alt="${esc(m.caption || 'Photo du match')}" loading="lazy">
+      ${m.caption ? `<span class="media-cap">${esc(m.caption)}</span>` : ''}
+    </div>`;
+  }
+  if (m.type === 'video') {
+    return `<div class="media-item video" data-media="${i}" tabindex="0" role="button">
+      <video src="${esc(m.src)}" muted preload="metadata"></video>
+      <span class="media-badge">▶ Vidéo</span>
+      ${m.caption ? `<span class="media-cap">${esc(m.caption)}</span>` : ''}
+    </div>`;
+  }
+  // lien externe (YouTube principalement)
+  const yt = youtubeID(m.src);
+  if (yt) {
+    return `<a class="media-item link" data-media="${i}" href="#mediaclick-${i}" tabindex="0">
+      <img src="https://i.ytimg.com/vi/${yt}/hqdefault.jpg" alt="Vidéo externe" loading="lazy">
+      <span class="media-badge">▶ YouTube</span>
+      ${m.caption ? `<span class="media-cap">${esc(m.caption)}</span>` : ''}
+    </a>`;
+  }
+  return `<a class="media-item link" href="${esc(m.src)}" target="_blank" rel="noopener">🔗 Ouvrir le lien</a>`;
+}
+
+/* Lightbox plein écran : photos/vidéos du match, navigation flèches */
+function openLightbox(medias, index) {
+  const old = document.getElementById('mediaLightbox');
+  if (old) old.remove();
+  let cur = index;
+  function render() {
+    const m = medias[cur];
+    const yt = m.type !== 'photo' && m.type !== 'video' ? youtubeID(m.src) : null;
+    let content;
+    if (m.type === 'photo') content = `<img src="${esc(m.src)}" alt="">`;
+    else if (m.type === 'video') content = `<video src="${esc(m.src)}" controls autoplay></video>`;
+    else if (yt) content = `<iframe src="https://www.youtube.com/embed/${yt}?autoplay=1" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+    else content = `<a class="btn btn-primary" href="${esc(m.src)}" target="_blank" rel="noopener">Ouvrir le lien ↗</a>`;
+    lb.innerHTML = `
+      <div class="lb-back" data-lb="close"></div>
+      <div class="lb-card">
+        <button class="lb-close" data-lb="close">✕</button>
+        <div class="lb-media">${content}</div>
+        ${m.caption ? `<div class="lb-cap">${esc(m.caption)}</div>` : ''}
+        <div class="lb-nav">
+          <button class="btn btn-ghost" data-lb="prev">← Préc.</button>
+          <span class="lb-counter">${cur + 1} / ${medias.length}</span>
+          <button class="btn btn-ghost" data-lb="next">Suiv. →</button>
+        </div>
+      </div>`;
+  }
+  const lb = document.createElement('div');
+  lb.id = 'mediaLightbox';
+  lb.className = 'lightbox';
+  lb.addEventListener('click', (e) => {
+    const a = e.target.closest('[data-lb]');
+    if (!a) return;
+    const act = a.dataset.lb;
+    if (act === 'close') lb.remove();
+    else if (act === 'prev') cur = (cur - 1 + medias.length) % medias.length, render();
+    else if (act === 'next') cur = (cur + 1) % medias.length, render();
+  });
+  lb.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') lb.remove();
+    if (e.key === 'ArrowLeft') { cur = (cur - 1 + medias.length) % medias.length; render(); }
+    if (e.key === 'ArrowRight') { cur = (cur + 1) % medias.length; render(); }
+  });
+  render();
+  document.body.appendChild(lb);
+}
+
+function bindMediaClicks(container) {
+  const mediasParJ = window.__mediasParJ || new Map();
+  container.querySelectorAll('[data-media]').forEach((el) => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const j = el.dataset.journee || el.closest('[data-journee]')?.dataset.journee;
+      const list = j ? mediasParJ.get(j) || [] : [];
+      if (!list.length) return;
+      const i = parseInt(el.dataset.media || '0', 10);
+      // re-index : data-media renvoie à la position dans le groupe du match
+      const rel = list.findIndex((m) => (m.type === 'photo' || m.type === 'video') ? (el.querySelector('img,video')?.src === m.src || el.dataset.media === String(list.indexOf(m))) : true);
+      const idx = rel >= 0 ? rel : i;
+      openLightbox(list, idx);
+    });
+  });
 }
 
 function makeICS(m) {

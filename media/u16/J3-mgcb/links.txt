@@ -1,0 +1,2 @@
+# Vidéo externe exemple (remplacez par la vraie URL)
+https://www.youtube.com/watch?v=dQw4w9WgXcQ
