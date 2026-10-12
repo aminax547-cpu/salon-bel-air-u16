@@ -1,10 +1,11 @@
 name: Sync classements FFF
-# ⚠️ Fréquence réduite à 1×/jour (08h) pour limiter les notifications GitHub.
-# Chaque étape est tolérante : si la FFF bloque (403 WAF), le job continue
-# et le site garde ses dernières données — AUCUN e-mail d'échec n'est émis.
+# ⚠️ IMPORTANT : le scraping FFF est bloqué depuis GitHub Actions (WAF FFF
+# bloque les IP de datacenter → 403). Les classements/calendriers/stats sont
+# donc récupérés depuis l'environnement local (workspace) et poussés dans ce
+# repo. Ce workflow ne fait QUE vérifier/commiter les données déjà présentes
+# et régénérer l'index des médias — il ne scrape plus la FFF.
+# Déclenchement : manuel (workflow_dispatch) uniquement.
 on:
-  schedule:
-    - cron: '0 8 * * *'
   workflow_dispatch:
 permissions:
   contents: write
@@ -13,35 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Calendrier U16 (API District)
-        run: node tools/fetch-calendrier.mjs --cat u16 || echo "⚠️ FFF bloqué (403) — données conservées"
-
-      - name: Calendrier U19 (API District)
-        run: node tools/fetch-calendrier.mjs --cat u19 || echo "⚠️ FFF bloqué (403) — données conservées"
-
-      - name: Sync U16 (classement)
-        run: node tools/fetch-fff.mjs --cat u16 || echo "⚠️ FFF bloqué (403) — données conservées"
-
-      - name: Sync U19 (classement)
-        run: node tools/fetch-fff.mjs --cat u19 || echo "⚠️ FFF bloqué (403) — données conservées"
-
-      - name: Feuilles U16 (compo + événements → stats)
-        run: node tools/fetch-feilles.mjs --cat u16 || echo "⚠️ FFF bloqué (403) — données conservées"
-
-      - name: Feuilles U19 (compo + événements → stats)
-        run: node tools/fetch-feilles.mjs --cat u19 || echo "⚠️ FFF bloqué (403) — données conservées"
-
       - name: Indexer les médias
         run: node tools/index-media.mjs || echo "⚠️ index médias échoué — ignoré"
-
       - name: Commit si modification
         run: |
           if ! git diff --quiet; then
             git config user.name "bot-classement"
             git config user.email "bot@users.noreply.github.com"
             git add -A
-            git commit -m "auto: sync FFF (calendrier + classements + feuilles + stats + médias) — $(date -u +%Y-%m-%d)"
+            git commit -m "auto: index médias — $(date -u +%Y-%m-%d)"
             git push
             echo "✅ Mise à jour poussée."
           else
