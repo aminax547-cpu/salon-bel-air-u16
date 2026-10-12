@@ -116,7 +116,13 @@ async function getMatchs() {
         'X-Requested-With': 'XMLHttpRequest',
       },
     });
-    if (!res.ok) throw new Error('API HTTP ' + res.status);
+    if (!res.ok) {
+      if (res.status === 403) {
+        console.log('  ⚠️ API District bloquée (403) → repli SSR epreuves.fff.fr…');
+        return await fallbackSsrMatchs();
+      }
+      throw new Error('API HTTP ' + res.status);
+    }
     const body = await res.json();
     const mem = body['hydra:member'] || [];
     tous = tous.concat(mem);
@@ -125,6 +131,66 @@ async function getMatchs() {
     await attente(250);
   }
   return tous;
+}
+
+/**
+ * Repli : la page HTML SSR d'epreuves.fff.fr contient les matchs de la semaine
+ * active + les journées proches (le WAF laisse passer les pages, pas l'API).
+ * On récupère la phase + les blocs de matchs embarqués pour reconstruire un
+ * calendrier partiel (adversaires, scores) quand l'API DOFA est bloquée.
+ * (Ne pas échouer le workflow : en cas de blocage complet on renvoie [] et le
+ * site garde ses données précédentes.)
+ */
+async function fallbackSsrMatchs() {
+  try {
+    const page = `https://epreuves.fff.fr/competition/engagement/${CAT.cpNo}-${''}/phase/1/1`;
+    const res = await fetch(page, {
+      headers: {
+        'User-Agent': UA,
+        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'fr-FR,fr;q=0.9',
+        'Sec-Fetch-Dest': 'document', 'Sec-Fetch-Mode': 'navigate', 'Sec-Fetch-Site': 'none', 'Sec-Fetch-User': '?1',
+      },
+    });
+    if (!res.ok) throw new Error('SSR HTTP ' + res.status);
+    const html = await res.text();
+    const m = html.match(/<script[^>]*id="ng-state"[^>]*>\s*(.*?)<\/script>/s);
+    if (!m) throw new Error('ng-state absent');
+    const state = JSON.parse(
+      m[1].replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    );
+    // collecter toutes les clés matches?cpNo=… (semaines actives) + matchs/…
+    const out = [];
+    for (const key of Object.keys(state)) {
+      if (!key.includes(`/matches?cpNo=${CAT.cpNo}`)) continue;
+      const body = state[key]?.body;
+      for (const mt of body?.['hydra:member'] || []) {
+        const df = mt.donneesFormatees || mt;
+        const home = (df.recevant?.club || {}).nom || '';
+        const away = (df.visiteur?.club || {}).nom || '';
+        const st = df.stade || {};
+        out.push({
+          ma_no: mt.id || df.maNo,
+          home: { short_name: home },
+          away: { short_name: away },
+          terrain: { name: st.nom, address: Array.isArray(st.adresse) ? st.adresse.join(', ') : '', zip_code: '', city: '' },
+          poule_journee: { number: df.journee?.pjNo ?? null },
+          status: 'A',
+          home_score: df.recevant?.buts ?? null,
+          away_score: df.visiteur?.buts ?? null,
+          home_resu: df.recevant?.resu ?? null,
+          date: df.date ?? null,
+          time: df.date ? new Date(df.date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }).replace(':', 'H') : null,
+        });
+      }
+    }
+    console.log(`  ✅ Repli SSR : ${out.length} matchs récupérés`);
+    return out;
+  } catch (e) {
+    console.warn(`  Repli SSR échoué (${e.message}) — le site garde ses données.`);
+    return [];
+  }
 }
 
 /** Normalise un match DOFA → objet calendrier (brief §3A). */
